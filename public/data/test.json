@@ -1,0 +1,182 @@
+[
+	{
+		"announced": "¿Cuántos jugadores hay en un equipo de fútbol en el campo?",
+		"options": [
+			{ "text": "9", "correct": false },
+			{ "text": "10", "correct": false },
+			{ "text": "11", "correct": true },
+			{ "text": "12", "correct": false }
+		]
+	},
+	{
+		"announced": "¿En qué deporte se utiliza una raqueta y una pelota amarilla?",
+		"options": [
+			{ "text": "Bádminton", "correct": false },
+			{ "text": "Tenis", "correct": true },
+			{ "text": "Squash", "correct": false },
+			{ "text": "Ping-pong", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Cuántos sets se necesitan para ganar un partido de tenis masculino en Grand Slam?",
+		"options": [
+			{ "text": "2", "correct": false },
+			{ "text": "3", "correct": true },
+			{ "text": "4", "correct": false },
+			{ "text": "5", "correct": false }
+		]
+	},
+	{
+		"announced": "¿En qué deporte se usa un balón ovalado?",
+		"options": [
+			{ "text": "Fútbol", "correct": false },
+			{ "text": "Rugby", "correct": true },
+			{ "text": "Baloncesto", "correct": false },
+			{ "text": "Voleibol", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Cuántos puntos vale un triple en baloncesto?",
+		"options": [
+			{ "text": "1", "correct": false },
+			{ "text": "2", "correct": false },
+			{ "text": "3", "correct": true },
+			{ "text": "4", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Qué país ganó el Mundial de fútbol 2010?",
+		"options": [
+			{ "text": "Brasil", "correct": false },
+			{ "text": "Alemania", "correct": false },
+			{ "text": "España", "correct": true },
+			{ "text": "Argentina", "correct": false }
+		]
+	},
+	{
+		"announced": "¿En qué deporte se utiliza un guante y un bate?",
+		"options": [
+			{ "text": "Cricket", "correct": false },
+			{ "text": "Béisbol", "correct": true },
+			{ "text": "Hockey", "correct": false },
+			{ "text": "Golf", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Cuántos jugadores hay en un equipo de baloncesto en pista?",
+		"options": [
+			{ "text": "4", "correct": false },
+			{ "text": "5", "correct": true },
+			{ "text": "6", "correct": false },
+			{ "text": "7", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Qué deporte se practica en Wimbledon?",
+		"options": [
+			{ "text": "Golf", "correct": false },
+			{ "text": "Tenis", "correct": true },
+			{ "text": "Cricket", "correct": false },
+			{ "text": "Fútbol", "correct": false }
+		]
+	},
+	{
+		"announced": "¿En qué deporte se utiliza un casco, stick y puck?",
+		"options": [
+			{ "text": "Hockey sobre hielo", "correct": true },
+			{ "text": "Hockey hierba", "correct": false },
+			{ "text": "Lacrosse", "correct": false },
+			{ "text": "Rugby", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Cuánto dura un partido de fútbol reglamentario?",
+		"options": [
+			{ "text": "80 minutos", "correct": false },
+			{ "text": "90 minutos", "correct": true },
+			{ "text": "100 minutos", "correct": false },
+			{ "text": "120 minutos", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Qué deporte incluye la posición de 'quarterback'?",
+		"options": [
+			{ "text": "Rugby", "correct": false },
+			{ "text": "Fútbol americano", "correct": true },
+			{ "text": "Baloncesto", "correct": false },
+			{ "text": "Béisbol", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Cuántos hoyos tiene un campo de golf estándar?",
+		"options": [
+			{ "text": "9", "correct": false },
+			{ "text": "12", "correct": false },
+			{ "text": "18", "correct": true },
+			{ "text": "24", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Qué país es famoso por el sumo?",
+		"options": [
+			{ "text": "China", "correct": false },
+			{ "text": "Corea", "correct": false },
+			{ "text": "Japón", "correct": true },
+			{ "text": "Tailandia", "correct": false }
+		]
+	},
+	{
+		"announced": "¿En qué deporte se lanza una jabalina?",
+		"options": [
+			{ "text": "Natación", "correct": false },
+			{ "text": "Atletismo", "correct": true },
+			{ "text": "Ciclismo", "correct": false },
+			{ "text": "Remo", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Qué deporte utiliza una red alta y se juega en arena o pista?",
+		"options": [
+			{ "text": "Tenis", "correct": false },
+			{ "text": "Voleibol", "correct": true },
+			{ "text": "Balonmano", "correct": false },
+			{ "text": "Hockey", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Cuántos jugadores hay en un equipo de voleibol en cancha?",
+		"options": [
+			{ "text": "5", "correct": false },
+			{ "text": "6", "correct": true },
+			{ "text": "7", "correct": false },
+			{ "text": "8", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Qué deporte consiste en recorrer una distancia nadando, en bici y corriendo?",
+		"options": [
+			{ "text": "Decatlón", "correct": false },
+			{ "text": "Triatlón", "correct": true },
+			{ "text": "Pentatlón", "correct": false },
+			{ "text": "Maratón", "correct": false }
+		]
+	},
+	{
+		"announced": "¿Qué deporte utiliza una pista ovalada y coches a gran velocidad?",
+		"options": [
+			{ "text": "Motocross", "correct": false },
+			{ "text": "Fórmula 1", "correct": true },
+			{ "text": "Rally", "correct": false },
+			{ "text": "Karting", "correct": false }
+		]
+	},
+	{
+		"announced": "¿En qué deporte se usa una canasta elevada?",
+		"options": [
+			{ "text": "Balonmano", "correct": false },
+			{ "text": "Baloncesto", "correct": true },
+			{ "text": "Fútbol sala", "correct": false },
+			{ "text": "Voleibol", "correct": false }
+		]
+	}
+]
