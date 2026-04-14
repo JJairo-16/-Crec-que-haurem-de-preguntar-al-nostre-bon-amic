@@ -1,37 +1,9 @@
-import {
-  loadThemeQuiz,
-  createQuizGame,
-  getCurrentQuestion,
-  answerCurrentQuestion,
-  getGameResults
-} from './themes-loader.js';
+import { loadOrCreateQuizSession } from './libs/quiz-service.js';
+import { createSessionStorageAdapter } from './libs/storage-adapter.js';
 
 const QUIZ_STATE_KEY = 'quizState';
 const SELECTED_THEME_KEY = 'selectedTheme';
 const QUESTIONS_AMOUNT = 5;
-
-function saveQuizState(game) {
-  sessionStorage.setItem(QUIZ_STATE_KEY, JSON.stringify(game));
-}
-
-function loadQuizState() {
-  const raw = sessionStorage.getItem(QUIZ_STATE_KEY);
-
-  if (!raw) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(raw);
-  } catch {
-    sessionStorage.removeItem(QUIZ_STATE_KEY);
-    return null;
-  }
-}
-
-function clearQuizState() {
-  sessionStorage.removeItem(QUIZ_STATE_KEY);
-}
 
 function getSelectedThemeName() {
   return sessionStorage.getItem(SELECTED_THEME_KEY);
@@ -59,11 +31,14 @@ function createElement(tag, options = {}) {
   return element;
 }
 
-function render(app, game, theme) {
-  const question = getCurrentQuestion(game);
+function render(app, quiz) {
+  const question = quiz.getQuestion();
+  const theme = quiz.getTheme();
+  const game = quiz.getState();
+  const { current, total } = quiz.getProgress();
 
   if (!question) {
-    renderResults(app, game, theme);
+    renderResults(app, quiz);
     return;
   }
 
@@ -76,7 +51,7 @@ function render(app, game, theme) {
   });
 
   const progress = createElement('p', {
-    text: `Pregunta ${game.currentQuestionIndex + 1} de ${game.questions.length}`
+    text: `Pregunta ${current} de ${total} (${current / total * 100}%)`
   });
 
   const score = createElement('p', {
@@ -105,8 +80,7 @@ function render(app, game, theme) {
     button.addEventListener('click', () => {
       handleAnswer({
         app,
-        game,
-        theme,
+        quiz,
         question,
         selectedIndex: index,
         optionsContainer,
@@ -129,15 +103,13 @@ function render(app, game, theme) {
 
 function handleAnswer({
   app,
-  game,
-  theme,
+  quiz,
   question,
   selectedIndex,
   optionsContainer,
   feedback
 }) {
-  const result = answerCurrentQuestion(game, selectedIndex);
-  saveQuizState(game);
+  const result = quiz.answer(selectedIndex);
 
   const buttons = optionsContainer.querySelectorAll('button');
 
@@ -167,15 +139,16 @@ function handleAnswer({
 
   nextButton.type = 'button';
   nextButton.addEventListener('click', () => {
-    render(app, game, theme);
+    render(app, quiz);
   });
 
   feedback.appendChild(message);
   feedback.appendChild(nextButton);
 }
 
-function renderResults(app, game, theme) {
-  const results = getGameResults(game);
+function renderResults(app, quiz) {
+  const results = quiz.getResults();
+  const theme = quiz.getTheme();
 
   app.innerHTML = '';
 
@@ -215,7 +188,7 @@ function renderResults(app, game, theme) {
 
   backButton.type = 'button';
   backButton.addEventListener('click', () => {
-    clearQuizState();
+    quiz.clear();
     clearSelectedTheme();
     globalThis.location.href = './index.html';
   });
@@ -248,29 +221,22 @@ async function init() {
   app.innerHTML = '<p>Carregant quiz...</p>';
 
   try {
-    let game = loadQuizState();
-    let theme = { name: themeName };
+    const storage = createSessionStorageAdapter(sessionStorage);
 
-    if (game?.themeName !== themeName) {
-      const loaded = await loadThemeQuiz(themeName, {
-        amount: QUESTIONS_AMOUNT,
-        shuffleQuestions: true,
-        shuffleOptions: true
-      });
+    const quiz = await loadOrCreateQuizSession({
+      themeName,
+      amount: QUESTIONS_AMOUNT,
+      shuffleQuestions: true,
+      shuffleOptions: true,
+      storage,
+      stateKey: QUIZ_STATE_KEY
+    });
 
-      theme = loaded.theme;
-      game = createQuizGame(loaded.questions, {
-        themeName: theme.name
-      });
-
-      saveQuizState(game);
-    }
-
-    render(app, game, theme);
+    render(app, quiz);
   } catch (error) {
     console.error(error);
     app.innerHTML = `<p>Error: ${error.message}</p>`;
   }
 }
 
-init();
+await init();
