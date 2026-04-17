@@ -7,7 +7,13 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #a8d8ff 0%, #ffffff 100%);
+    background-image: url('../img/backgroundImage.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: rgba(168, 216, 255, 0.4);
+    background-blend-mode: lighten;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -33,12 +39,21 @@ body {
     }
 }
 
+#section-name-input {
+    display: block;
+}
+
+#section-category-select {
+    display: none;
+}
+
 .container {
-    background: white;
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 30px;
     padding: 40px 30px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
     text-align: center;
+    backdrop-filter: blur(5px);
 }
 
 
@@ -171,9 +186,19 @@ label {
     width: auto;
     margin-top: 20px;
 }
+#btn-start-game {
+    background: linear-gradient(135deg, #0ac71d 0%, #41e952 100%);
+    color: white;
+}
 
 #btn-enter:hover {
     background: linear-gradient(135deg, #7b93c6 0%, #5b6fa8 100%);
+    color: white;
+}
+
+#btn-start-game:hover {
+    background: linear-gradient(135deg, #09b81b 0%, #3ad94a 100%);
+    color: rgb(139, 222, 162);
 }
 
 /* ============================================
