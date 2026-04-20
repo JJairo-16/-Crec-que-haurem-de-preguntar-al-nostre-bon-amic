@@ -4,24 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preguntem al nostre amic</title>
-
     <link rel="stylesheet" href="css/style.css">
     <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
-    
     <section id="screen-inici" class="screen">
-        
         <div id="section-name-input" class="container">
             <h1>Preguntem al nostre amic</h1>
-            
+
             <div class="form-group">
                 <label for="user-name">Ingresa el teu nom:</label>
-                <input 
-                    type="text" 
-                    id="user-name" 
-                    placeholder="El teu nom..." 
+                <input
+                    type="text"
+                    id="user-name"
+                    placeholder="El teu nom..."
                     maxlength="50"
                 >
             </div>
@@ -29,27 +26,16 @@
             <button id="btn-enter" class="btn">Entrar</button>
         </div>
 
-        <!-- Segunda Sección: Selección de categoría -->
         <div id="section-category-select" class="container">
             <h2 id="welcome-text">Hola, <span id="display-name">[Nom]</span>!</h2>
             <p class="category-label">Categoria:</p>
-            
-            <div class="category-grid">
-                <button id="btn-cinema" class="btn btn-category">
-                    <img src="img/mascotaCine.png" alt="Mascota Cine" class="mascot-img">
-                    <span>Cine</span>
-                </button>
-                <button id="btn-sports" class="btn btn-category">
-                    <img src="img/mascotaDeportes.png" alt="Mascota Deportes" class="mascot-img">
-                    <span>Deportes</span>
-                </button>
-            </div>
+
+            <div class="category-grid" id="category-grid"></div>
 
             <button id="btn-start-game" class="btn">Comenzar</button>
         </div>
     </section>
 
-    
-    <script src="js/main.js" type="module"></script>
+    <script type="module" src="./js/main.js"></script>
 </body>
 </html>

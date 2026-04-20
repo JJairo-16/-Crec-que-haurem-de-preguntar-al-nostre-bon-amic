@@ -68,6 +68,14 @@ export function validateThemes(themes) {
     if (typeof theme.path !== 'string' || theme.path.trim() === '') {
       throw new Error(`El tema "${theme.name}" ha de tenir un "path" vàlid`);
     }
+
+    if (theme.img != null && typeof theme.img !== 'string') {
+      throw new Error(`El tema "${theme.name}" ha de tenir un "img" string`);
+    }
+
+    if (theme.color != null && typeof theme.color !== 'string') {
+      throw new Error(`El tema "${theme.name}" ha de tenir un "color" string`);
+    }
   }
 }
 
@@ -169,7 +177,9 @@ export async function loadThemes(themesPath = DEFAULT_THEMES_PATH) {
 
   const normalizedThemes = themes.map(theme => ({
     name: theme.name,
-    path: theme.path
+    path: theme.path,
+    img: theme.img ?? '',
+    color: theme.color ?? ''
   }));
 
   themesCache.set(themesPath, normalizedThemes);
