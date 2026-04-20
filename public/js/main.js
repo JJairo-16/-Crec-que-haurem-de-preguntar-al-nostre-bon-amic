@@ -1,78 +1,123 @@
-import { loadThemes } from './libs/themes-loader.js';
-
 const PLAYER_NAME_KEY = 'playerName';
+const SELECTED_THEME_KEY = 'selectedTheme';
 
-function createElement(tag, options = {}) {
-    const element = document.createElement(tag);
+const dom = {
+  btnEnter: document.getElementById('btn-enter'),
+  btnCinema: document.getElementById('btn-cinema'),
+  btnSports: document.getElementById('btn-sports'),
+  btnStartGame: document.getElementById('btn-start-game'),
+  userNameInput: document.getElementById('user-name'),
+  sectionNameInput: document.getElementById('section-name-input'),
+  sectionCategorySelect: document.getElementById('section-category-select'),
+  displayName: document.getElementById('display-name'),
+};
 
-    if (options.className) {
-        element.className = options.className;
-    }
+const state = {
+  playerName: '',
+  selectedTheme: null
+};
 
-    if (options.text) {
-        element.textContent = options.text;
-    }
-
-    if (options.html) {
-        element.innerHTML = options.html;
-    }
-
-    return element;
+function showCategorySection(playerName) {
+  dom.displayName.textContent = playerName;
+  dom.sectionNameInput.style.display = 'none';
+  dom.sectionCategorySelect.style.display = 'block';
 }
 
-async function initThemesPage() {
-    const app = document.getElementById('app');
-
-    const name_label = createElement('p', {
-        text: 'Nom: '
-    });
-
-    const name_input = createElement('input');
-    name_input.placeholder = 'Introdueix el teu nom';
-
-    const savedName = sessionStorage.getItem(PLAYER_NAME_KEY);
-    if (savedName) {
-        name_input.value = savedName;
-    }
-
-    try {
-        const themes = await loadThemes();
-
-        const title = document.createElement('h1');
-        title.textContent = 'Selecciona un tema';
-
-        const list = document.createElement('div');
-
-        themes.forEach(theme => {
-            const button = document.createElement('button');
-            button.textContent = theme.name;
-
-            button.addEventListener('click', () => {
-                const name = name_input.value.trim();
-
-                if (!name) {
-                    alert('Si us plau, introdueix el teu nom');
-                    return;
-                }
-
-                sessionStorage.setItem(PLAYER_NAME_KEY, name);
-
-                sessionStorage.setItem('selectedTheme', theme.name);
-
-                globalThis.location.href = './quiz.html';
-            });
-
-            list.appendChild(button);
-        });
-
-        app.appendChild(title);
-        app.appendChild(name_label);
-        app.appendChild(name_input);
-        app.appendChild(list);
-    } catch (error) {
-        console.error(error);
-        app.textContent = `Error: ${error.message}`;
-    }
+function savePlayerName(name) {
+  sessionStorage.setItem(PLAYER_NAME_KEY, name);
 }
 
-await initThemesPage();
+function saveSelectedTheme(themeName) {
+  sessionStorage.setItem(SELECTED_THEME_KEY, themeName);
+}
+
+function loadSavedPlayerName() {
+  return sessionStorage.getItem(PLAYER_NAME_KEY) ?? '';
+}
+
+function validatePlayerName() {
+  const userName = dom.userNameInput.value.trim();
+
+  if (userName === '') {
+    alert('Si us plau, introdueix el teu nom');
+    return null;
+  }
+
+  return userName;
+}
+
+function handleEnter() {
+  const userName = validatePlayerName();
+
+  if (!userName) {
+    return;
+  }
+
+  state.playerName = userName;
+  savePlayerName(userName);
+  showCategorySection(userName);
+}
+
+function selectTheme(themeName) {
+  state.selectedTheme = themeName;
+
+  dom.btnCinema.classList.remove('selected');
+  dom.btnSports.classList.remove('selected');
+
+  if (themeName === 'Cine') {
+    dom.btnCinema.classList.add('selected');
+  }
+
+  if (themeName === 'Deportes') {
+    dom.btnSports.classList.add('selected');
+  }
+}
+
+function handleStartGame() {
+  if (!state.playerName || !state.selectedTheme) {
+    alert('Primer has d’introduir el teu nom i seleccionar una categoria');
+    return;
+  }
+
+  saveSelectedTheme(state.selectedTheme);
+  globalThis.location.href = './quiz.html';
+}
+
+function restoreSession() {
+  const savedName = loadSavedPlayerName();
+
+  if (!savedName) {
+    return;
+  }
+
+  state.playerName = savedName;
+  dom.userNameInput.value = savedName;
+  showCategorySection(savedName);
+}
+
+function bindEvents() {
+  dom.btnEnter.addEventListener('click', handleEnter);
+
+  dom.userNameInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      handleEnter();
+    }
+  });
+
+  dom.btnCinema.addEventListener('click', () => {
+    selectTheme('Cine');
+  });
+
+  dom.btnSports.addEventListener('click', () => {
+    selectTheme('test');
+  });
+
+  dom.btnStartGame.addEventListener('click', handleStartGame);
+}
+
+function init() {
+  bindEvents();
+  restoreSession();
+}
+
+init();

@@ -1,0 +1,243 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-image: url('../img/backgroundImage.png');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    background-attachment: fixed;
+    background-color: rgba(168, 216, 255, 0.4);
+    background-blend-mode: lighten;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+.screen {
+    width: 100%;
+    max-width: 500px;
+    animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#section-name-input {
+    display: block;
+}
+
+#section-category-select {
+    display: none;
+}
+
+.container {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 30px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    backdrop-filter: blur(5px);
+}
+
+
+h1 {
+    font-size: 2.2rem;
+    color: #1a5f9e;
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+p {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-size: 1rem;
+    color: #2c3e50;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+
+.form-group {
+    margin-bottom: 30px;
+}
+
+#user-name {
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    border: 2px solid #d0e8f7;
+    border-radius: 15px;
+    background-color: #f9f9f9;
+    color: #2c3e50;
+    transition: all 0.3s ease;
+}
+
+#user-name:focus {
+    outline: none;
+    border-color: #a8d8ff;
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(168, 216, 255, 0.2);
+}
+
+#user-name::placeholder {
+    color: #999;
+}
+
+
+.category-group {
+    margin: 35px 0;
+}
+
+.category-group p {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+/* BOTONES GENERALES */
+
+.btn {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+}
+
+/* BOTONES DE CATEGORÍA */
+
+.btn-category {
+    width: 100%;
+    padding: 20px;
+    font-size: 1.2rem;
+    margin: 10px 0;
+    border-radius: 20px;
+}
+
+#btn-cinema {
+    background: linear-gradient(135deg, #E11D48 0%, #e51736 100%);
+    color: white;
+}
+
+#btn-cinema:hover {
+    background: linear-gradient(135deg, #f02f59 0%, #c6173d 100%);
+}
+
+#btn-sports {
+    background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+    color: white;
+}
+
+#btn-sports:hover {
+    background: linear-gradient(135deg, #2E68E8 0%, #1541C8 100%);
+}
+
+/* ============================================
+   BOTÓN DE COMENZAR/ENTRADA
+   ============================================ */
+
+#btn-enter {
+    background: linear-gradient(135deg, #8ba3d6 0%, #6b7fb8 100%);
+    color: white;
+    padding: 15px 40px;
+    width: auto;
+    margin-top: 20px;
+}
+#btn-start-game {
+    background: linear-gradient(135deg, #0ac71d 0%, #41e952 100%);
+    color: white;
+}
+
+#btn-enter:hover {
+    background: linear-gradient(135deg, #7b93c6 0%, #5b6fa8 100%);
+    color: white;
+}
+
+#btn-start-game:hover {
+    background: linear-gradient(135deg, #09b81b 0%, #3ad94a 100%);
+    color: rgb(139, 222, 162);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 1.8rem;
+    }
+
+    .container {
+        padding: 30px 20px;
+        border-radius: 25px;
+    }
+
+    .btn-category {
+        padding: 18px;
+        font-size: 1.1rem;
+    }
+
+    #user-name {
+        padding: 12px;
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 360px) {
+    h1 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .container {
+        padding: 25px 15px;
+    }
+
+    .btn-category {
+        padding: 15px;
+        font-size: 1rem;
+    }
+}

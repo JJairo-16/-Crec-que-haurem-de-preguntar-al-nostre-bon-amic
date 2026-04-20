@@ -1,44 +1,55 @@
 <!DOCTYPE html>
 <html lang="ca">
 <head>
-  <meta charset="UTF-8">
-  <title>Quiz - Selecció de tema</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntem al nostre amic</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      display: flex;
-      justify-content: center;
-      padding-top: 50px;
-    }
-
-    #app {
-      width: 400px;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      cursor: pointer;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      background: #eee;
-    }
-
-    button:hover {
-      background: #ddd;
-    }
-  </style>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
-  <div id="app"></div>
-  <script type="module" src="js/main.js"></script>
+    
+    <section id="screen-inici" class="screen">
+        
+        <div id="section-name-input" class="container">
+            <h1>Preguntem al nostre amic</h1>
+            
+            <div class="form-group">
+                <label for="user-name">Ingresa el teu nom:</label>
+                <input 
+                    type="text" 
+                    id="user-name" 
+                    placeholder="El teu nom..." 
+                    maxlength="50"
+                >
+            </div>
+
+            <button id="btn-enter" class="btn">Entrar</button>
+        </div>
+
+        <!-- Segunda Sección: Selección de categoría -->
+        <div id="section-category-select" class="container">
+            <h2 id="welcome-text">Hola, <span id="display-name">[Nom]</span>!</h2>
+            <p class="category-label">Categoria:</p>
+            
+            <div class="category-grid">
+                <button id="btn-cinema" class="btn btn-category">
+                    <img src="img/mascotaCine.png" alt="Mascota Cine" class="mascot-img">
+                    <span>Cine</span>
+                </button>
+                <button id="btn-sports" class="btn btn-category">
+                    <img src="img/mascotaDeportes.png" alt="Mascota Deportes" class="mascot-img">
+                    <span>Deportes</span>
+                </button>
+            </div>
+
+            <button id="btn-start-game" class="btn">Comenzar</button>
+        </div>
+    </section>
+
+    
+    <script src="js/main.js" type="module"></script>
 </body>
 </html>
