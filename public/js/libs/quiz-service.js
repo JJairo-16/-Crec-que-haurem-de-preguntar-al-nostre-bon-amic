@@ -3,7 +3,9 @@ import {
   createQuizGame,
   getCurrentQuestion,
   answerCurrentQuestion,
-  getGameResults
+  getGameResults,
+  isQuestionAnswered,
+  isCurrentQuestionAnswered
 } from './themes-loader.js';
 
 const DEFAULT_QUESTIONS_AMOUNT = 5;
@@ -28,42 +30,66 @@ export class QuizSession {
   }
 
   /**
-   * Retorna el tema actual del quiz
-   * @returns {Object}
+   * Retorna el tema actual del quiz.
+   *
+   * @returns {Object} Tema actual
    */
   getTheme() {
     return this.theme;
   }
 
   /**
-   * Retorna l'estat complet del joc
-   * @returns {Object}
+   * Retorna l'estat complet del joc.
+   *
+   * @returns {Object} Estat del joc
    */
   getState() {
     return this.game;
   }
 
   /**
-   * Retorna la pregunta actual
-   * @returns {Object|null}
+   * Retorna la pregunta actual.
+   *
+   * @returns {Object|null} Pregunta actual o `null`
    */
   getQuestion() {
     return getCurrentQuestion(this.game);
   }
 
   /**
-   * Indica si el quiz ha finalitzat
-   * @returns {boolean}
+   * Indica si el quiz ha finalitzat.
+   *
+   * @returns {boolean} `true` si ha finalitzat
    */
   hasFinished() {
     return !getCurrentQuestion(this.game);
   }
 
   /**
-   * Respon la pregunta actual
+   * Comprova si una pregunta concreta ja ha estat resposta.
+   *
+   * @param {number} questionIndex - Índex de la pregunta
+   * @returns {boolean} `true` si ja s'ha respost
+   */
+  isQuestionAnswered(questionIndex) {
+    return isQuestionAnswered(this.game, questionIndex);
+  }
+
+  /**
+   * Comprova si la pregunta actual ja ha estat resposta.
+   *
+   * @returns {boolean} `true` si la pregunta actual ja s'ha respost
+   */
+  isCurrentQuestionAnswered() {
+    return isCurrentQuestionAnswered(this.game);
+  }
+
+  /**
+   * Respon la pregunta actual.
+   *
    * @param {number} selectedIndex - Índex de la resposta seleccionada
-   * @throws {Error} si el joc ja ha acabat
-   * @returns {Object} resultat amb informació de la resposta
+   * @throws {Error} Si la partida ja ha finalitzat
+   * @returns {Object} Resultat de la resposta
    */
   answer(selectedIndex) {
     const currentQuestion = this.getQuestion();
@@ -83,16 +109,18 @@ export class QuizSession {
   }
 
   /**
-   * Retorna els resultats finals del joc
-   * @returns {Object}
+   * Retorna els resultats finals del joc.
+   *
+   * @returns {Object} Resultats del joc
    */
   getResults() {
     return getGameResults(this.game);
   }
 
   /**
-   * Retorna el progrés actual del quiz
-   * @returns {{ current: number, total: number }}
+   * Retorna el progrés actual del quiz.
+   *
+   * @returns {{ current: number, total: number }} Progrés actual
    */
   getProgress() {
     return {
@@ -102,36 +130,43 @@ export class QuizSession {
   }
 
   /**
-   * Guarda l'estat actual al sistema d'emmagatzematge
+   * Guarda l'estat actual al sistema d'emmagatzematge.
+   *
    * @returns {void}
    */
   save() {
-    if (!this.storage) return;
+    if (!this.storage) {
+      return;
+    }
+
     this.storage.set(this.stateKey, this.game);
   }
 
   /**
-   * Elimina l'estat guardat
+   * Elimina l'estat guardat.
+   *
    * @returns {void}
    */
   clear() {
-    if (!this.storage) return;
+    if (!this.storage) {
+      return;
+    }
+
     this.storage.remove(this.stateKey);
   }
 }
 
 /**
- * Crea una nova sessió de quiz
- * 
+ * Crea una nova sessió de quiz.
+ *
  * @param {Object} params
- * @param {string} params.themeName
- * @param {number} [params.amount]
- * @param {boolean} [params.shuffleQuestions]
- * @param {boolean} [params.shuffleOptions]
- * @param {Object|null} [params.storage]
- * @param {string} [params.stateKey]
- * 
- * @returns {Promise<QuizSession>}
+ * @param {string} params.themeName - Nom del tema
+ * @param {number} [params.amount=DEFAULT_QUESTIONS_AMOUNT] - Nombre de preguntes
+ * @param {boolean} [params.shuffleQuestions=true] - Si cal barrejar preguntes
+ * @param {boolean} [params.shuffleOptions=true] - Si cal barrejar opcions
+ * @param {Object|null} [params.storage=null] - Sistema d'emmagatzematge
+ * @param {string} [params.stateKey='quizState'] - Clau d'emmagatzematge
+ * @returns {Promise<QuizSession>} Nova sessió creada
  */
 export async function createQuizSession({
   themeName,
@@ -168,17 +203,16 @@ export async function createQuizSession({
 }
 
 /**
- * Carrega una sessió existent o en crea una de nova
- * 
+ * Carrega una sessió existent o en crea una de nova.
+ *
  * @param {Object} params
- * @param {string} params.themeName
- * @param {number} [params.amount]
- * @param {boolean} [params.shuffleQuestions]
- * @param {boolean} [params.shuffleOptions]
- * @param {Object|null} [params.storage]
- * @param {string} [params.stateKey]
- * 
- * @returns {Promise<QuizSession>}
+ * @param {string} params.themeName - Nom del tema
+ * @param {number} [params.amount=DEFAULT_QUESTIONS_AMOUNT] - Nombre de preguntes
+ * @param {boolean} [params.shuffleQuestions=true] - Si cal barrejar preguntes
+ * @param {boolean} [params.shuffleOptions=true] - Si cal barrejar opcions
+ * @param {Object|null} [params.storage=null] - Sistema d'emmagatzematge
+ * @param {string} [params.stateKey='quizState'] - Clau d'emmagatzematge
+ * @returns {Promise<QuizSession>} Sessió carregada o creada
  */
 export async function loadOrCreateQuizSession({
   themeName,

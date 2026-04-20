@@ -3,6 +3,7 @@ import { createSessionStorageAdapter } from './libs/storage-adapter.js';
 
 const QUIZ_STATE_KEY = 'quizState';
 const SELECTED_THEME_KEY = 'selectedTheme';
+const PLAYER_NAME_KEY = 'playerName';
 const QUESTIONS_AMOUNT = 5;
 
 function getSelectedThemeName() {
@@ -11,6 +12,10 @@ function getSelectedThemeName() {
 
 function clearSelectedTheme() {
   sessionStorage.removeItem(SELECTED_THEME_KEY);
+}
+
+function getPlayerName() {
+  return sessionStorage.getItem(PLAYER_NAME_KEY) ?? 'Jugador/a';
 }
 
 function createElement(tag, options = {}) {
@@ -31,11 +36,18 @@ function createElement(tag, options = {}) {
   return element;
 }
 
+function goBackToThemes(quiz) {
+  quiz.clear();
+  clearSelectedTheme();
+  globalThis.location.href = './index.html';
+}
+
 function render(app, quiz) {
   const question = quiz.getQuestion();
   const theme = quiz.getTheme();
   const game = quiz.getState();
-  const { current, total } = quiz.getProgress();
+  const { current: rawCurrent, total } = quiz.getProgress();
+  const current = quiz.isCurrentQuestionAnswered() ? rawCurrent : rawCurrent - 1;
 
   if (!question) {
     renderResults(app, quiz);
@@ -51,7 +63,7 @@ function render(app, quiz) {
   });
 
   const progress = createElement('p', {
-    text: `Pregunta ${current} de ${total} (${current / total * 100}%)`
+    text: `Pregunta ${current} de ${total} (${((current / total) * 100).toFixed(0)}%)`
   });
 
   const score = createElement('p', {
@@ -68,6 +80,21 @@ function render(app, quiz) {
 
   const feedback = createElement('div', {
     className: 'feedback'
+  });
+
+  const abandonButton = createElement('button', {
+    text: 'Abandonar quiz'
+  });
+
+  abandonButton.type = 'button';
+  abandonButton.addEventListener('click', () => {
+    const confirmExit = globalThis.confirm('Segur que vols abandonar el quiz?');
+
+    if (!confirmExit) {
+      return;
+    }
+
+    goBackToThemes(quiz);
   });
 
   question.options.forEach((option, index) => {
@@ -97,6 +124,7 @@ function render(app, quiz) {
   container.appendChild(questionTitle);
   container.appendChild(optionsContainer);
   container.appendChild(feedback);
+  container.appendChild(abandonButton);
 
   app.appendChild(container);
 }
@@ -149,6 +177,7 @@ function handleAnswer({
 function renderResults(app, quiz) {
   const results = quiz.getResults();
   const theme = quiz.getTheme();
+  const playerName = getPlayerName();
 
   app.innerHTML = '';
 
@@ -158,6 +187,10 @@ function renderResults(app, quiz) {
 
   const title = createElement('h1', {
     text: `Resultats - ${theme.name}`
+  });
+
+  const player = createElement('p', {
+    text: `Nom: ${playerName}`
   });
 
   const score = createElement('p', {
@@ -188,12 +221,11 @@ function renderResults(app, quiz) {
 
   backButton.type = 'button';
   backButton.addEventListener('click', () => {
-    quiz.clear();
-    clearSelectedTheme();
-    globalThis.location.href = './index.html';
+    goBackToThemes(quiz);
   });
 
   container.appendChild(title);
+  container.appendChild(player);
   container.appendChild(score);
   container.appendChild(percent);
   container.appendChild(summaryTitle);
