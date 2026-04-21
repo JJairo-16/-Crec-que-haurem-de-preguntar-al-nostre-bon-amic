@@ -8,7 +8,7 @@ import {
   isCurrentQuestionAnswered
 } from './themes-loader.js';
 
-const DEFAULT_QUESTIONS_AMOUNT = 5;
+const DEFAULT_QUESTIONS_AMOUNT = 15;
 
 /**
  * Classe que gestiona una sessió de quiz.

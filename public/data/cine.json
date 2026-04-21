@@ -1,0 +1,182 @@
+[
+  {
+    "announced": "Qui va dirigir la pel·lícula 'Titanic'?",
+    "options": [
+      { "text": "Steven Spielberg", "correct": false },
+      { "text": "James Cameron", "correct": true },
+      { "text": "Christopher Nolan", "correct": false },
+      { "text": "Ridley Scott", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin actor interpreta Harry Potter al cinema?",
+    "options": [
+      { "text": "Elijah Wood", "correct": false },
+      { "text": "Rupert Grint", "correct": false },
+      { "text": "Daniel Radcliffe", "correct": true },
+      { "text": "Tom Holland", "correct": false }
+    ]
+  },
+  {
+    "announced": "A quina saga pertany el personatge Darth Vader?",
+    "options": [
+      { "text": "Star Trek", "correct": false },
+      { "text": "Star Wars", "correct": true },
+      { "text": "The Matrix", "correct": false },
+      { "text": "Avatar", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula té com a protagonista un lleó anomenat Simba?",
+    "options": [
+      { "text": "Madagascar", "correct": false },
+      { "text": "El llibre de la selva", "correct": false },
+      { "text": "El rei lleó", "correct": true },
+      { "text": "Zootròpolis", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin gènere de cinema busca provocar por o tensió?",
+    "options": [
+      { "text": "Comèdia", "correct": false },
+      { "text": "Terror", "correct": true },
+      { "text": "Musical", "correct": false },
+      { "text": "Documental", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula sud-coreana va guanyar l'Oscar a millor pel·lícula el 2020?",
+    "options": [
+      { "text": "Oldboy", "correct": false },
+      { "text": "Parasite", "correct": true },
+      { "text": "Train to Busan", "correct": false },
+      { "text": "Memories of Murder", "correct": false }
+    ]
+  },
+  {
+    "announced": "Qui interpreta el Joker a 'The Dark Knight'?",
+    "options": [
+      { "text": "Joaquin Phoenix", "correct": false },
+      { "text": "Jared Leto", "correct": false },
+      { "text": "Heath Ledger", "correct": true },
+      { "text": "Jack Nicholson", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula comença amb el famós personatge Forrest assegut en un banc?",
+    "options": [
+      { "text": "Nàufrag", "correct": false },
+      { "text": "Forrest Gump", "correct": true },
+      { "text": "Big", "correct": false },
+      { "text": "Philadelphia", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin estudi va crear personatges com Woody i Buzz Lightyear?",
+    "options": [
+      { "text": "DreamWorks", "correct": false },
+      { "text": "Pixar", "correct": true },
+      { "text": "Illumination", "correct": false },
+      { "text": "Studio Ghibli", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula gira al voltant d'un parc ple de dinosaures clonats?",
+    "options": [
+      { "text": "King Kong", "correct": false },
+      { "text": "Jurassic Park", "correct": true },
+      { "text": "Godzilla", "correct": false },
+      { "text": "Avatar", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin objecte perd la Ventafocs abans de marxar del ball?",
+    "options": [
+      { "text": "Una corona", "correct": false },
+      { "text": "Una sabata de cristall", "correct": true },
+      { "text": "Un guant", "correct": false },
+      { "text": "Un collaret", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula mostra un vaixell que s'enfonsa després de xocar amb un iceberg?",
+    "options": [
+      { "text": "Poseidon", "correct": false },
+      { "text": "Titanic", "correct": true },
+      { "text": "Master and Commander", "correct": false },
+      { "text": "Pearl Harbor", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin actor és conegut per interpretar Indiana Jones?",
+    "options": [
+      { "text": "Harrison Ford", "correct": true },
+      { "text": "Tom Cruise", "correct": false },
+      { "text": "Mel Gibson", "correct": false },
+      { "text": "Brad Pitt", "correct": false }
+    ]
+  },
+  {
+    "announced": "A quina ciutat viatja la família de 'Home Alone 2' mentre Kevin es queda sol a Nova York?",
+    "options": [
+      { "text": "París", "correct": false },
+      { "text": "Roma", "correct": false },
+      { "text": "Miami", "correct": true },
+      { "text": "Londres", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula d'animació té una nina vaquera anomenada Jessie?",
+    "options": [
+      { "text": "Frozen", "correct": false },
+      { "text": "Toy Story", "correct": true },
+      { "text": "Shrek", "correct": false },
+      { "text": "Coco", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin superheroi és conegut com el Cavaller Fosc?",
+    "options": [
+      { "text": "Superman", "correct": false },
+      { "text": "Batman", "correct": true },
+      { "text": "Iron Man", "correct": false },
+      { "text": "Spider-Man", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula presenta un boxejador anomenat Rocky Balboa?",
+    "options": [
+      { "text": "Raging Bull", "correct": false },
+      { "text": "Rocky", "correct": true },
+      { "text": "Creed", "correct": false },
+      { "text": "Million Dollar Baby", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula està protagonitzada per un ogre verd?",
+    "options": [
+      { "text": "Monsters, Inc.", "correct": false },
+      { "text": "Shrek", "correct": true },
+      { "text": "How to Train Your Dragon", "correct": false },
+      { "text": "Kung Fu Panda", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin premi de cinema és una estatueta daurada molt famosa?",
+    "options": [
+      { "text": "El Goya", "correct": false },
+      { "text": "L'Oscar", "correct": true },
+      { "text": "La Palma d'Or", "correct": false },
+      { "text": "El BAFTA", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quina pel·lícula tracta sobre un pallasso malvat anomenat Pennywise?",
+    "options": [
+      { "text": "The Conjuring", "correct": false },
+      { "text": "It", "correct": true },
+      { "text": "Insidious", "correct": false },
+      { "text": "Scream", "correct": false }
+    ]
+  }
+]

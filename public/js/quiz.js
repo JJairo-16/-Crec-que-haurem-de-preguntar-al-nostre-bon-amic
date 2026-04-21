@@ -4,7 +4,7 @@ import { createSessionStorageAdapter } from './libs/storage-adapter.js';
 const QUIZ_STATE_KEY = 'quizState';
 const SELECTED_THEME_KEY = 'selectedTheme';
 const PLAYER_NAME_KEY = 'playerName';
-const QUESTIONS_AMOUNT = 5;
+const QUESTIONS_AMOUNT = 15;
 
 /**
  * Obté el nom del tema seleccionat.

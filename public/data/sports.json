@@ -1,0 +1,182 @@
+[
+  {
+    "announced": "Quants jugadors hi ha en un equip de futbol al camp?",
+    "options": [
+      { "text": "9", "correct": false },
+      { "text": "10", "correct": false },
+      { "text": "11", "correct": true },
+      { "text": "12", "correct": false }
+    ]
+  },
+  {
+    "announced": "En quin esport s'utilitza una raqueta i una pilota groga?",
+    "options": [
+      { "text": "Bàdminton", "correct": false },
+      { "text": "Tennis", "correct": true },
+      { "text": "Esquaix", "correct": false },
+      { "text": "Tennis de taula", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quants sets cal guanyar en un partit masculí de Grand Slam?",
+    "options": [
+      { "text": "2", "correct": false },
+      { "text": "3", "correct": true },
+      { "text": "4", "correct": false },
+      { "text": "5", "correct": false }
+    ]
+  },
+  {
+    "announced": "En quin esport s'utilitza una pilota ovalada?",
+    "options": [
+      { "text": "Futbol", "correct": false },
+      { "text": "Rugbi", "correct": true },
+      { "text": "Bàsquet", "correct": false },
+      { "text": "Voleibol", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quants punts val un triple en bàsquet?",
+    "options": [
+      { "text": "1", "correct": false },
+      { "text": "2", "correct": false },
+      { "text": "3", "correct": true },
+      { "text": "4", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin país va guanyar el Mundial de futbol del 2010?",
+    "options": [
+      { "text": "Brasil", "correct": false },
+      { "text": "Alemanya", "correct": false },
+      { "text": "Espanya", "correct": true },
+      { "text": "Argentina", "correct": false }
+    ]
+  },
+  {
+    "announced": "En quin esport s'utilitzen un guant i un bat?",
+    "options": [
+      { "text": "Cricket", "correct": false },
+      { "text": "Beisbol", "correct": true },
+      { "text": "Hoquei", "correct": false },
+      { "text": "Golf", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quants jugadors hi ha en un equip de bàsquet a la pista?",
+    "options": [
+      { "text": "4", "correct": false },
+      { "text": "5", "correct": true },
+      { "text": "6", "correct": false },
+      { "text": "7", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin esport es practica a Wimbledon?",
+    "options": [
+      { "text": "Golf", "correct": false },
+      { "text": "Tennis", "correct": true },
+      { "text": "Cricket", "correct": false },
+      { "text": "Futbol", "correct": false }
+    ]
+  },
+  {
+    "announced": "En quin esport s'utilitzen casc, estic i disc?",
+    "options": [
+      { "text": "Hoquei sobre gel", "correct": true },
+      { "text": "Hoquei herba", "correct": false },
+      { "text": "Lacrosse", "correct": false },
+      { "text": "Rugbi", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quant dura un partit reglamentari de futbol?",
+    "options": [
+      { "text": "80 minuts", "correct": false },
+      { "text": "90 minuts", "correct": true },
+      { "text": "100 minuts", "correct": false },
+      { "text": "120 minuts", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin esport inclou la posició de 'quarterback'?",
+    "options": [
+      { "text": "Rugbi", "correct": false },
+      { "text": "Futbol americà", "correct": true },
+      { "text": "Bàsquet", "correct": false },
+      { "text": "Beisbol", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quants forats té un camp de golf estàndard?",
+    "options": [
+      { "text": "9", "correct": false },
+      { "text": "12", "correct": false },
+      { "text": "18", "correct": true },
+      { "text": "24", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin país és famós pel sumo?",
+    "options": [
+      { "text": "Xina", "correct": false },
+      { "text": "Corea", "correct": false },
+      { "text": "Japó", "correct": true },
+      { "text": "Tailàndia", "correct": false }
+    ]
+  },
+  {
+    "announced": "En quin esport es llança una javelina?",
+    "options": [
+      { "text": "Natació", "correct": false },
+      { "text": "Atletisme", "correct": true },
+      { "text": "Ciclisme", "correct": false },
+      { "text": "Rem", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin esport utilitza una xarxa alta i es juga a la sorra o en pista?",
+    "options": [
+      { "text": "Tennis", "correct": false },
+      { "text": "Voleibol", "correct": true },
+      { "text": "Handbol", "correct": false },
+      { "text": "Hoquei", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quants jugadors hi ha en un equip de voleibol a la pista?",
+    "options": [
+      { "text": "5", "correct": false },
+      { "text": "6", "correct": true },
+      { "text": "7", "correct": false },
+      { "text": "8", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin esport consisteix a recórrer una distància nedant, en bicicleta i corrent?",
+    "options": [
+      { "text": "Decatló", "correct": false },
+      { "text": "Triatló", "correct": true },
+      { "text": "Pentatló", "correct": false },
+      { "text": "Marató", "correct": false }
+    ]
+  },
+  {
+    "announced": "Quin esport utilitza una pista ovalada i cotxes a gran velocitat?",
+    "options": [
+      { "text": "Motocròs", "correct": false },
+      { "text": "Fórmula 1", "correct": true },
+      { "text": "Ral·li", "correct": false },
+      { "text": "Kàrting", "correct": false }
+    ]
+  },
+  {
+    "announced": "En quin esport s'utilitza una cistella elevada?",
+    "options": [
+      { "text": "Handbol", "correct": false },
+      { "text": "Bàsquet", "correct": true },
+      { "text": "Futbol sala", "correct": false },
+      { "text": "Voleibol", "correct": false }
+    ]
+  }
+]
