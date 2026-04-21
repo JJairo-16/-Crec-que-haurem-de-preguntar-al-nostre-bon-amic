@@ -15,7 +15,8 @@ const dom = {
 
 const state = {
   playerName: '',
-  selectedTheme: null
+  selectedTheme: null,
+  selectedButton: null
 };
 
 function savePlayerName(name) {
@@ -51,14 +52,13 @@ function showCategorySection(playerName) {
   dom.sectionCategorySelect.style.display = 'block';
 }
 
-function clearSelectedButtons() {
-  const buttons = dom.categoryGrid.querySelectorAll('.btn-category');
-  buttons.forEach(button => button.classList.remove('selected'));
-}
-
 function selectTheme(button, themeName) {
+  if (state.selectedButton && state.selectedButton !== button) {
+    state.selectedButton.classList.remove('selected');
+  }
+
+  state.selectedButton = button;
   state.selectedTheme = themeName;
-  clearSelectedButtons();
   button.classList.add('selected');
 }
 
@@ -106,7 +106,10 @@ function createThemeButton(theme, index) {
   button.type = 'button';
   button.className = 'btn btn-category';
   button.dataset.theme = theme.name;
-  button.style.setProperty('--theme-bg', theme.color || 'linear-gradient(135deg, #64748b 0%, #334155 100%)');
+  button.style.setProperty(
+    '--theme-bg',
+    theme.color || 'linear-gradient(135deg, #64748b 0%, #334155 100%)'
+  );
   button.style.setProperty('--theme-delay', `${index * 70}ms`);
 
   const img = document.createElement('img');
@@ -119,40 +122,59 @@ function createThemeButton(theme, index) {
   text.textContent = theme.name;
 
   button.append(img, text);
-
-  button.addEventListener('click', () => {
-    selectTheme(button, theme.name);
-  });
-
   return button;
 }
 
 async function renderThemeButtons() {
   const themes = await loadThemes();
   const savedTheme = loadSavedSelectedTheme();
+  const fragment = document.createDocumentFragment();
 
   dom.categoryGrid.innerHTML = '';
+  state.selectedButton = null;
+  state.selectedTheme = null;
 
-  themes.forEach((theme, index) => {
+  for (const [index, theme] of themes.entries()) {
     const button = createThemeButton(theme, index);
-    dom.categoryGrid.appendChild(button);
+    fragment.appendChild(button);
 
     if (savedTheme === theme.name) {
-      selectTheme(button, theme.name);
+      state.selectedButton = button;
+      state.selectedTheme = theme.name;
+      button.classList.add('selected');
     }
-  });
+  }
+
+  dom.categoryGrid.appendChild(fragment);
+}
+
+function handleCategoryGridClick(event) {
+  const button = event.target.closest('.btn-category');
+
+  if (!button || !dom.categoryGrid.contains(button)) {
+    return;
+  }
+
+  const themeName = button.dataset.theme;
+
+  if (!themeName) {
+    return;
+  }
+
+  selectTheme(button, themeName);
 }
 
 function bindEvents() {
   dom.btnEnter.addEventListener('click', handleEnter);
 
-  dom.userNameInput.addEventListener('keypress', event => {
+  dom.userNameInput.addEventListener('keydown', event => {
     if (event.key === 'Enter') {
       handleEnter();
     }
   });
 
   dom.btnStartGame.addEventListener('click', handleStartGame);
+  dom.categoryGrid.addEventListener('click', handleCategoryGridClick);
 }
 
 async function init() {

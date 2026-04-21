@@ -19,8 +19,8 @@ export class QuizSession {
    * @param {Object} params
    * @param {Object} params.game - Estat intern del joc
    * @param {Object} params.theme - Informació del tema
-   * @param {Object|null} params.storage - Sistema d'emmagatzematge opcional
-   * @param {string} params.stateKey - Clau per guardar l'estat
+   * @param {Object|null} [params.storage=null] - Sistema d'emmagatzematge opcional
+   * @param {string} [params.stateKey='quizState'] - Clau per guardar l'estat
    */
   constructor({ game, theme, storage = null, stateKey = 'quizState' }) {
     this.game = game;
@@ -62,7 +62,7 @@ export class QuizSession {
    * @returns {boolean} `true` si ha finalitzat
    */
   hasFinished() {
-    return !getCurrentQuestion(this.game);
+    return this.game.finished === true || !getCurrentQuestion(this.game);
   }
 
   /**
@@ -103,8 +103,7 @@ export class QuizSession {
 
     return {
       ...result,
-      question: currentQuestion,
-      finished: this.hasFinished()
+      question: currentQuestion
     };
   }
 
@@ -123,9 +122,11 @@ export class QuizSession {
    * @returns {{ current: number, total: number }} Progrés actual
    */
   getProgress() {
+    const total = Array.isArray(this.game.questions) ? this.game.questions.length : 0;
+
     return {
-      current: this.game.currentQuestionIndex + 1,
-      total: this.game.questions.length
+      current: total === 0 ? 0 : Math.min(this.game.currentQuestionIndex + 1, total),
+      total
     };
   }
 
@@ -203,6 +204,25 @@ export async function createQuizSession({
 }
 
 /**
+ * Indica si un estat guardat es pot reutilitzar.
+ *
+ * @param {any} savedGame - Estat guardat
+ * @param {string} themeName - Tema esperat
+ * @returns {boolean} `true` si es pot reutilitzar
+ */
+function isReusableSavedGame(savedGame, themeName) {
+  return Boolean(
+    savedGame &&
+    typeof savedGame === 'object' &&
+    savedGame.themeName === themeName &&
+    Array.isArray(savedGame.questions) &&
+    Array.isArray(savedGame.answers) &&
+    typeof savedGame.currentQuestionIndex === 'number' &&
+    typeof savedGame.score === 'number'
+  );
+}
+
+/**
  * Carrega una sessió existent o en crea una de nova.
  *
  * @param {Object} params
@@ -228,13 +248,23 @@ export async function loadOrCreateQuizSession({
 
   const savedGame = storage?.get(stateKey) ?? null;
 
-  if (savedGame?.themeName === themeName) {
-    return new QuizSession({
-      game: savedGame,
-      theme: { name: themeName },
-      storage,
-      stateKey
-    });
+  if (savedGame) {
+    try {
+      const normalizedGame = normalizeGameState(savedGame);
+
+      if (isReusableSavedGame(normalizedGame, themeName)) {
+        storage?.set(stateKey, normalizedGame);
+
+        return new QuizSession({
+          game: normalizedGame,
+          theme: { name: themeName },
+          storage,
+          stateKey
+        });
+      }
+    } catch {
+      storage?.remove(stateKey);
+    }
   }
 
   return createQuizSession({

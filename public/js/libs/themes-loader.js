@@ -3,9 +3,16 @@ const DEFAULT_THEMES_PATH = './data/themes.json';
 /**
  * Caché en memòria de la llista de temes carregada des de themes.json.
  * La clau és la ruta del fitxer de temes.
- * @type {Map<string, Array<{name: string, path: string}>>}
+ * @type {Map<string, Array<{name: string, path: string, img: string, color: string}>>}
  */
 const themesCache = new Map();
+
+/**
+ * Caché en memòria dels quizzes carregats.
+ * La clau és la ruta relativa del fitxer del quiz.
+ * @type {Map<string, Array>}
+ */
+const quizCache = new Map();
 
 /**
  * Barreja un array sense modificar l'original.
@@ -121,7 +128,10 @@ function validateQuestion(question, questionIndex) {
 
   for (const [optionIndex, option] of question.options.entries()) {
     validateOption(optionIndex, option, question);
-    if (option.correct) correctCount++;
+
+    if (option.correct) {
+      correctCount++;
+    }
   }
 
   if (correctCount === 0) {
@@ -165,7 +175,7 @@ function validateOption(optionIndex, option, question) {
  * Utilitza caché en memòria per evitar recàrregues repetides.
  *
  * @param {string} [themesPath=DEFAULT_THEMES_PATH] - Ruta del fitxer de temes
- * @returns {Promise<Array<{name: string, path: string}>>} Llista normalitzada de temes
+ * @returns {Promise<Array<{name: string, path: string, img: string, color: string}>>}
  */
 export async function loadThemes(themesPath = DEFAULT_THEMES_PATH) {
   if (themesCache.has(themesPath)) {
@@ -203,11 +213,26 @@ export function clearThemesCache(themesPath) {
 }
 
 /**
+ * Buida la caché de quizzes.
+ *
+ * @param {string} [quizPath] - Ruta concreta a invalidar. Si no es passa, s'esborra tota la caché
+ * @returns {void}
+ */
+export function clearQuizCache(quizPath) {
+  if (quizPath) {
+    quizCache.delete(quizPath);
+    return;
+  }
+
+  quizCache.clear();
+}
+
+/**
  * Busca un tema pel seu nom.
  *
  * @param {string} themeName - Nom del tema
  * @param {string} [themesPath=DEFAULT_THEMES_PATH] - Ruta del fitxer de temes
- * @returns {Promise<{name: string, path: string}>} Tema trobat
+ * @returns {Promise<{name: string, path: string, img: string, color: string}>} Tema trobat
  */
 export async function getThemeByName(themeName, themesPath = DEFAULT_THEMES_PATH) {
   const themes = await loadThemes(themesPath);
@@ -221,8 +246,28 @@ export async function getThemeByName(themeName, themesPath = DEFAULT_THEMES_PATH
 }
 
 /**
+ * Carrega i valida el contingut base d'un quiz utilitzant caché.
+ *
+ * @param {string} path - Ruta relativa del fitxer del quiz
+ * @returns {Promise<Array>} Quiz validat
+ */
+async function loadRawQuiz(path) {
+  if (quizCache.has(path)) {
+    return quizCache.get(path);
+  }
+
+  const quiz = await fetchJson(`data/${path}`);
+  validateQuiz(quiz);
+  quizCache.set(path, quiz);
+
+  return quiz;
+}
+
+/**
  * Carrega el quiz d'un tema.
- * No clona les preguntes perquè provenen d'un JSON controlat.
+ *
+ * El contingut base es reutilitza des de caché per evitar fetchs i validacions
+ * repetides. Les barreges es fan sobre còpies per no modificar la base.
  *
  * @param {string} path - Ruta del fitxer del quiz
  * @param {number|null} [amount=null] - Nombre màxim de preguntes
@@ -236,14 +281,9 @@ export async function loadQuiz(
   shuffleQuestions = true,
   shuffleOptions = true
 ) {
-  const quiz = await fetchJson(`data/${path}`);
-  validateQuiz(quiz);
+  const quiz = await loadRawQuiz(path);
 
-  let result = quiz;
-
-  if (shuffleQuestions) {
-    result = shuffleArray(result);
-  }
+  let result = shuffleQuestions ? shuffleArray(quiz) : [...quiz];
 
   if (shuffleOptions) {
     result = result.map(question => ({
@@ -272,7 +312,7 @@ export async function loadQuiz(
  * @param {number|null} [options.amount=null] - Nombre màxim de preguntes
  * @param {boolean} [options.shuffleQuestions=true] - Si s'han de barrejar les preguntes
  * @param {boolean} [options.shuffleOptions=true] - Si s'han de barrejar les opcions
- * @returns {Promise<{theme: {name: string, path: string}, questions: Array}>}
+ * @returns {Promise<{theme: {name: string, path: string, img: string, color: string}, questions: Array}>}
  */
 export async function loadThemeQuiz(themeName, options = {}) {
   const {
@@ -325,9 +365,10 @@ export function getCorrectOptionIndex(question) {
 /**
  * Comprova si una pregunta concreta ja ha estat resposta.
  *
- * És compatible amb dos formats:
- * - antic: es dedueix per la posició (`questionIndex < answers.length`)
- * - nou: cada resposta pot incloure `questionIndex`
+ * Compatibilitat:
+ * - format nou recomanat: `game.answeredIndexes[questionIndex] === true`
+ * - format intermig: `answers[]` amb `questionIndex`
+ * - format antic: es dedueix per posició (`questionIndex < answers.length`)
  *
  * @param {Object} game - Estat del joc
  * @param {number} questionIndex - Índex de la pregunta
@@ -342,19 +383,31 @@ export function isQuestionAnswered(game, questionIndex) {
     throw new TypeError('questionIndex ha de ser un enter major o igual que 0');
   }
 
+  if (
+    game.answeredIndexes &&
+    typeof game.answeredIndexes === 'object' &&
+    game.answeredIndexes !== null
+  ) {
+    return game.answeredIndexes[questionIndex] === true;
+  }
+
   if (game.answers.length === 0) {
     return false;
   }
 
-  const hasIndexedAnswers = game.answers.some(
-    answer => answer && Number.isInteger(answer.questionIndex)
-  );
+  let hasIndexedAnswers = false;
 
-  if (hasIndexedAnswers) {
-    return game.answers.some(answer => answer?.questionIndex === questionIndex);
+  for (const answer of game.answers) {
+    if (answer && Number.isInteger(answer.questionIndex)) {
+      hasIndexedAnswers = true;
+
+      if (answer.questionIndex === questionIndex) {
+        return true;
+      }
+    }
   }
 
-  return questionIndex < game.answers.length;
+  return hasIndexedAnswers ? false : questionIndex < game.answers.length;
 }
 
 /**
@@ -396,7 +449,10 @@ export function checkAnswer(question, selectedIndex) {
 
 /**
  * Crea l'estat inicial del joc.
- * No es clonen les preguntes per evitar cost innecessari.
+ *
+ * Es manté una estructura `answeredIndexes` per poder saber en O(1)
+ * si una pregunta ja ha estat resposta, i alhora es conserva `answers`
+ * per mantenir el detall de les respostes.
  *
  * @param {Array} questions - Preguntes del quiz
  * @param {Object} [extra={}] - Dades extra del joc
@@ -407,6 +463,7 @@ export function checkAnswer(question, selectedIndex) {
  *   currentQuestionIndex: number,
  *   score: number,
  *   answers: Array,
+ *   answeredIndexes: Record<number, boolean>,
  *   finished: boolean
  * }}
  */
@@ -421,6 +478,7 @@ export function createQuizGame(questions, extra = {}) {
     currentQuestionIndex: 0,
     score: 0,
     answers: [],
+    answeredIndexes: {},
     finished: false
   };
 }
@@ -432,6 +490,10 @@ export function createQuizGame(questions, extra = {}) {
  * @returns {Object|null} Pregunta actual o `null` si el joc ha acabat
  */
 export function getCurrentQuestion(game) {
+  if (!game || !Array.isArray(game.questions)) {
+    throw new Error('Estat del joc invàlid');
+  }
+
   if (game.finished) {
     return null;
   }
@@ -470,6 +532,12 @@ export function answerCurrentQuestion(game, selectedIndex) {
     selectedIndex,
     correct
   });
+
+  if (!game.answeredIndexes || typeof game.answeredIndexes !== 'object') {
+    game.answeredIndexes = {};
+  }
+
+  game.answeredIndexes[questionIndex] = true;
 
   if (correct) {
     game.score++;

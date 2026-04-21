@@ -2,13 +2,13 @@
 	{
 		"name": "Cine",
 		"path": "test.json",
-		"img": "img/mascotaCine.png",
+		"img": "img/mascotaCine.webp",
 		"color": "linear-gradient(135deg, #E11D48 0%, #e51736 100%)"
 	},
 	{
 		"name": "Deportes",
 		"path": "test.json",
-		"img": "img/mascotaDeportes.png",
+		"img": "img/mascotaDeportes.webp",
 		"color": "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)"
 	}
 ]

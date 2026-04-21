@@ -4,6 +4,9 @@
  * Utilitza un Map intern per guardar dades durant l'execució.
  * No persisteix entre recàrregues de la pàgina.
  *
+ * Es fa una còpia defensiva en desar i recuperar per evitar
+ * mutacions externes inesperades sobre l'estat intern.
+ *
  * @returns {{
  *   get: (key: string) => any,
  *   set: (key: string, value: any) => void,
@@ -21,7 +24,11 @@ export function createMemoryStorage() {
      * @returns {any|null} Valor associat o `null` si no existeix
      */
     get(key) {
-      return store.has(key) ? store.get(key) : null;
+      if (!store.has(key)) {
+        return null;
+      }
+
+      return structuredClone(store.get(key));
     },
 
     /**
