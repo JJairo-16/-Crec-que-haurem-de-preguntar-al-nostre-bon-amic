@@ -6,7 +6,7 @@
 		"color": "linear-gradient(135deg, #E11D48 0%, #e51736 100%)"
 	},
 	{
-		"name": "Deportes",
+		"name": "Esports",
 		"path": "sports.json",
 		"img": "img/mascotaDeportes.webp",
 		"color": "linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)"

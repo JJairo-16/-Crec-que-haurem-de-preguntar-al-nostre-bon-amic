@@ -168,10 +168,11 @@ label {
     min-width: 160px;
 }
 
-#btn-start-game {
+.btn-container button {
     background: linear-gradient(135deg, #18c91f 0%, #47e45c 100%);
     color: white;
     min-width: 190px;
+    margin: 0 15px;
 }
 
 #btn-start-game:hover,
@@ -337,4 +338,20 @@ label {
     .mascot-img {
         width: 110px;
     }
+}
+
+.input-error {
+  color: #ef4444;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+#user-name.input-invalid {
+  border: 2px solid #ef4444;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+
+#user-name.input-invalid:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
 }

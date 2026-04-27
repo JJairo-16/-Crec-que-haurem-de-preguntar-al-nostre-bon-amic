@@ -2,15 +2,18 @@ import { loadThemes } from './libs/themes-loader.js';
 
 const PLAYER_NAME_KEY = 'playerName';
 const SELECTED_THEME_KEY = 'selectedTheme';
+const CURRENT_SCREEN_KEY = 'currentScreen';
 
 const dom = {
   btnEnter: document.getElementById('btn-enter'),
   btnStartGame: document.getElementById('btn-start-game'),
+  btnBackToName: document.getElementById('btn-back-to-name'),
   userNameInput: document.getElementById('user-name'),
   sectionNameInput: document.getElementById('section-name-input'),
   sectionCategorySelect: document.getElementById('section-category-select'),
   displayName: document.getElementById('display-name'),
-  categoryGrid: document.getElementById('category-grid')
+  categoryGrid: document.getElementById('category-grid'),
+  userNameError: document.getElementById('user-name-error')
 };
 
 const state = {
@@ -35,11 +38,35 @@ function loadSavedSelectedTheme() {
   return sessionStorage.getItem(SELECTED_THEME_KEY) ?? '';
 }
 
+function clearSelectedTheme() {
+  sessionStorage.removeItem(SELECTED_THEME_KEY);
+}
+
+function saveCurrentScreen(screen) {
+  sessionStorage.setItem(CURRENT_SCREEN_KEY, screen);
+}
+
+function loadCurrentScreen() {
+  return sessionStorage.getItem(CURRENT_SCREEN_KEY) ?? 'name';
+}
+
+function clearValidationError() {
+  dom.userNameError.textContent = '';
+  dom.userNameInput.classList.remove('input-invalid');
+}
+
+function showValidationError(message) {
+  dom.userNameError.textContent = message;
+  dom.userNameInput.classList.add('input-invalid');
+}
+
 function validatePlayerName() {
   const userName = dom.userNameInput.value.trim();
 
+  clearValidationError();
+
   if (!userName) {
-    alert('Si us plau, introdueix el teu nom');
+    showValidationError('Si us plau, introdueix el teu nom');
     return null;
   }
 
@@ -50,6 +77,29 @@ function showCategorySection(playerName) {
   dom.displayName.textContent = playerName;
   dom.sectionNameInput.style.display = 'none';
   dom.sectionCategorySelect.style.display = 'block';
+  saveCurrentScreen('category');
+}
+
+function showNameSection() {
+  dom.sectionNameInput.style.display = 'block';
+  dom.sectionCategorySelect.style.display = 'none';
+  dom.userNameInput.focus();
+  saveCurrentScreen('name');
+}
+
+function resetThemeSelection() {
+  if (state.selectedButton) {
+    state.selectedButton.classList.remove('selected');
+  }
+
+  state.selectedButton = null;
+  state.selectedTheme = null;
+  clearSelectedTheme();
+}
+
+function backToNameSelection() {
+  resetThemeSelection();
+  showNameSection();
 }
 
 function selectTheme(button, themeName) {
@@ -76,7 +126,8 @@ function handleEnter() {
 
 function handleStartGame() {
   if (!state.playerName) {
-    alert('Primer has d’introduir el teu nom');
+    showValidationError('Primer has d’introduir el teu nom');
+    showNameSection();
     return;
   }
 
@@ -91,13 +142,20 @@ function handleStartGame() {
 
 function restoreSessionVisibility() {
   const savedName = loadSavedPlayerName();
+  const savedScreen = loadCurrentScreen();
 
   if (!savedName) {
+    showNameSection();
     return;
   }
 
   state.playerName = savedName;
-  dom.userNameInput.value = savedName;
+
+  if (savedScreen === 'name') {
+    showNameSection();
+    return;
+  }
+
   showCategorySection(savedName);
 }
 
@@ -173,8 +231,13 @@ function bindEvents() {
     }
   });
 
+  dom.userNameInput.addEventListener('input', () => {
+    clearValidationError();
+  });
+
   dom.btnStartGame.addEventListener('click', handleStartGame);
   dom.categoryGrid.addEventListener('click', handleCategoryGridClick);
+  dom.btnBackToName?.addEventListener('click', backToNameSelection);
 }
 
 async function init() {

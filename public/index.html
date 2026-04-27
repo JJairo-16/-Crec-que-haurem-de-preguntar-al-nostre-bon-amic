@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,12 +16,8 @@
 
             <div class="form-group">
                 <label for="user-name">Ingresa el teu nom:</label>
-                <input
-                    type="text"
-                    id="user-name"
-                    placeholder="El teu nom..."
-                    maxlength="50"
-                >
+                <input type="text" id="user-name" placeholder="El teu nom..." maxlength="50">
+                <p id="user-name-error" class="input-error"></p>
             </div>
 
             <button id="btn-enter" class="btn">Entrar</button>
@@ -32,10 +29,14 @@
 
             <div class="category-grid" id="category-grid"></div>
 
-            <button id="btn-start-game" class="btn">Comenzar</button>
+            <div class="btn-container">
+                <button id="btn-start-game" class="btn">Començar</button>
+                <button id="btn-back-to-name" class="btn">Canviar nom</button>
+            </div>
         </div>
     </section>
 
     <script type="module" src="./js/main.js"></script>
 </body>
+
 </html>
