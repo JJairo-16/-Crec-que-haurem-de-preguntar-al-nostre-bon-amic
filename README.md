@@ -24,22 +24,52 @@ El projecte busca:
 
 ---
 
-## ▌Sistema de Preguntes
+## ▌Funcionalitats Implementades
 
-Els usuaris participen responent preguntes de diferents categories, com per exemple:
+### Pantalla d'Inici
+- **Introducció de nom**: L'usuari entra al joc amb el seu nom personalitzat
+- **Validació d'entrada**: Verificació de nom correcte i feedback visual d'errors
 
-- Cultura general  
-- Cinema i sèries  
-- Esports  
-- Música  
-- Ciència i tecnologia  
-- Història  
+### Selecció de Temes
+- **Carga dinàmica de categorias**: Sistema modular que carrega temes des de fitxers JSON
+- **Interfície visual atractiva**: Cada tema té imatge (mascota), nom i gradient de color personalitzat
+- **Temes disponibles actuals**: 
+  - **Cine**
+  - **Esports**
+- **Capacitat de cambiar Nom**: Et torna a la web principal per poder cambiar el nom
+### Sistema de Preguntes
+
+Els usuaris participen responent preguntes de diferents categories:
 
 Característiques:
 
-- Selecció de preguntes per categoria  
-- Validació de respostes  
-- Progressió basada en encerts  
+- **Selecció dinàmica de preguntes**: Carrega des de fitxers JSON específics per cada tema
+- **Barreja aleatòria**: Les preguntes es mostren en ordre aleatori (algoritme Fisher-Yates)
+- **Validació de respostes en temps real**: Feedback immediat de correctesa
+- **Progressió basada en encerts**: Seguiment del rendiment durant la sessió
+- **15 preguntes per sessió**: Nombre configurable de preguntes
+- **Interfície del Quiz mejorada**: Pantalla dedicada amb estilos moderns i responsiva  
+
+---
+
+## ▌Arquitectura Tècnica
+
+### Stack Tecnològic
+- **Frontend**: HTML5, CSS3, JavaScript (ES Modules)
+- **Dades**: JSON per a temes i preguntes
+- **Emmagatzematge**: SessionStorage per a persistència de sessió
+- **Arquitectura**: Modular amb librerías especializadas
+
+### Librerías Implementades
+- **`quiz-service.js`**: Gestor de sessions de quiz amb control d'estat del joc
+- **`themes-loader.js`**: Carga dinàmica de temes i preguntes, barreja aleatòria
+- **`storage-adapter.js`**: Sistema adapter per a emmagatzematge en memòria i sessionStorage
+
+### Característiques de Desenvolupament
+- Modularització amb ES6 Modules
+- Cache en memòria per optimitzar carregues
+- Copia defensiva de dades per evitar mutacions externes
+- Validació i gestió d'errors
 
 ---
 
@@ -59,6 +89,33 @@ Els punts permeten:
 
 ---
 
+## ▌Estructura del Projecte
+
+```
+.
+├── public/                    # Carpeta pública amb els recursos del joc
+│   ├── index.html            # Pantalla d'inici i selecció de categorias
+│   ├── quiz.html             # Pantalla del quiz i resultats
+│   ├── css/
+│   │   └── style.css         # Estilos principals de l'aplicació
+│   ├── data/
+│   │   ├── themes.json       # Definició de temes disponibles
+│   │   ├── cine.json         # Preguntes de Cine
+│   │   └── sports.json       # Preguntes de Esports
+│   ├── img/                  # Imatges i mascotes
+│   └── js/
+│       ├── main.js           # Script principal de l'aplicació
+│       ├── quiz.js           # Lógica del quiz
+│       └── libs/
+│           ├── quiz-service.js     # Servei de gestió de sesions
+│           ├── themes-loader.js    # Cargador dinàmic de temes
+│           └── storage-adapter.js  # Adapter de emmagatzematge
+├── README.md                 # Aquest fitxer
+└── LICENSE                   # Llicència MIT
+```
+
+---
+
 ## ▌Gamificació
 
 El sistema inclou elements de joc:
@@ -67,6 +124,24 @@ El sistema inclou elements de joc:
 - Progressió personal  
 - Sistema de puntuació dinàmic  
 - Incentius per constància  
+
+---
+
+## ▌Com Executar el Projecte
+
+### Requisits
+- Navegador web modern (Chrome, Firefox, Safari, Edge)
+- No es requereix cap dependència externa ni servidor
+
+### Inici Ràpid
+1. Clona o descarrega el repositori
+2. Obri `public/index.html` al navegador
+3. Introduïeix el teu nom i comença a jugar!
+
+### Desenvolupament
+El projecte utilitza **ES6 Modules**, per la qual cosa és recomanable executar-lo amb un servidor local:
+
+- **Live Server**: Executar index.html amb extensió de visual *Live Server* **instalada** (clickdret[Obrir amb liveServer])
 
 ---
 
