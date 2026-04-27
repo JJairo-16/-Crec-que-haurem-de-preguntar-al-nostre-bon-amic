@@ -1,286 +1,65 @@
 <!DOCTYPE html>
 <html lang="ca">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz</title>
-
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-
-      --bg: #eef2f7;
-      --card: #ffffff;
-
-      --text: #0f172a;
-      --muted: #475569;
-
-      --border: #dbe4ee;
-
-      --correct: #15803d;
-      --correct-bg: #ecfdf3;
-
-      --wrong: #dc2626;
-      --wrong-bg: #fef2f2;
-
-      --shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
-      --radius: 16px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100dvh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(180deg, #edf2f7 0%, #e6ecf3 100%);
-      color: var(--text);
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      padding: 16px;
-    }
-
-    #app {
-      width: 100%;
-      max-width: 760px;
-      background: var(--card);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
-      padding: 24px;
-
-      max-height: calc(100dvh - 32px);
-      overflow: auto;
-    }
-
-    .quiz-container,
-    .results-container {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 1.7rem;
-      line-height: 1.15;
-      color: var(--text);
-    }
-
-    h2 {
-      margin: 4px 0 0;
-      font-size: 1.45rem;
-      line-height: 1.2;
-      color: var(--text);
-    }
-
-    p {
-      margin: 0;
-      font-size: 1rem;
-      line-height: 1.4;
-      color: var(--muted);
-    }
-
-    .meta {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-      margin-top: 2px;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 8px;
-      background: #e2e8f0;
-      border-radius: 999px;
-      overflow: hidden;
-      margin-top: 2px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0;
-      background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
-      border-radius: inherit;
-      transition: width 0.25s ease;
-    }
-
-    .question-block {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    button {
-      appearance: none;
-      border: 1px solid var(--border);
-      background: #f8fafc;
-      color: var(--text);
-      border-radius: 12px;
-      padding: 13px 16px;
-      font-size: 1rem;
-      line-height: 1.25;
-      cursor: pointer;
-      transition:
-        background-color 0.18s ease,
-        border-color 0.18s ease,
-        transform 0.12s ease,
-        box-shadow 0.18s ease;
-    }
-
-    button:hover {
-      background: #eef4fb;
-      border-color: #cbd5e1;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
-    }
-
-    button:active {
-      transform: translateY(1px);
-    }
-
-    button:disabled {
-      cursor: default;
-      opacity: 1;
-    }
-
-    .correct {
-      border: 2px solid var(--correct);
-      background: var(--correct-bg);
-      color: #166534;
-      font-weight: 600;
-    }
-
-    .wrong {
-      border: 2px solid var(--wrong);
-      background: var(--wrong-bg);
-      color: #991b1b;
-      font-weight: 600;
-    }
-
-    .feedback {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 4px;
-    }
-
-    .feedback p {
-      color: var(--text);
-      font-size: 1rem;
-      font-weight: 600;
-    }
-
-    .actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .actions button {
-      min-width: 160px;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      border-color: var(--primary);
-      color: #ffffff;
-      font-weight: 600;
-    }
-
-    .btn-primary:hover {
-      background: var(--primary-hover);
-      border-color: var(--primary-hover);
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.18);
-    }
-
-    .btn-secondary {
-      background: #f1f5f9;
-      color: var(--text);
-    }
-
-    .results-container ul {
-      margin: 0;
-      padding-left: 18px;
-      color: var(--text);
-    }
-
-    .results-container li {
-      margin-bottom: 6px;
-      line-height: 1.35;
-    }
-
-    .results-actions {
-      display: flex;
-      gap: 10px;
-      margin-top: 6px;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 640px) {
-      body {
-        padding: 10px;
-      }
-
-      #app {
-        padding: 18px 16px;
-        border-radius: 16px;
-      }
-
-      h1 {
-        font-size: 1.45rem;
-      }
-
-      h2 {
-        font-size: 1.2rem;
-      }
-
-      p {
-        font-size: 0.95rem;
-      }
-
-      button {
-        width: 100%;
-        font-size: 0.95rem;
-        padding: 12px 14px;
-      }
-
-      .actions,
-      .results-actions {
-        flex-direction: column;
-      }
-
-      .actions button,
-      .results-actions button {
-        width: 100%;
-        min-width: 0;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preguntem al nostre amic</title>
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 </head>
 
 <body>
-  <div id="app"></div>
-  <script type="module" src="js/quiz.js"></script>
-</body>
+    <section id="screen-inici" class="screen" style="display: none;">
+        <div id="section-name-input" class="container">
+            <h1>Preguntem al nostre amic</h1>
+            <div class="form-group">
+                <label for="user-name">Ingresa el teu nom:</label>
+                <input type="text" id="user-name" placeholder="El teu nom..." maxlength="50">
+            </div>
+            <button id="btn-enter" class="btn">Entrar</button>
+        </div>
 
+        <div id="section-category-select" class="container">
+            <h2 id="welcome-text">Hola, <span id="display-name">[Nom]</span>!</h2>
+            <p class="category-label">Categoria:</p>
+            <div class="category-grid" id="category-grid"></div>
+            <button id="btn-start-game" class="btn">Comenzar</button>
+        </div>
+    </section>
+
+    <section id="screen-joc" class="screen">
+        <div class="quiz-container">
+            
+            <h2 class="category-theme">Tema: <span id="current-theme">Història</span></h2>
+            
+            <div class="question-counter">
+                Pregunta <span id="current-question">2</span> de <span id="total-questions">24</span> (0%)
+            </div>
+            
+            <div class="score-display">
+                Puntuació: <span id="current-score">0</span>
+            </div>
+
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-fill"></div>
+            </div>
+
+            <div class="question-box">
+                <p id="question-text">PREGUNTA: ....</p>
+            </div>
+
+            <div class="options-grid">
+                <button class="option-btn" id="option-a">Opció A</button> <button class="option-btn" id="option-b">Opció B</button>
+                <button class="option-btn" id="option-c">Opció C</button> <button class="option-btn" id="option-d">Opció D</button>
+            </div>
+
+            <div class="quiz-footer">
+                <button id="btn-leave" class="btn-leave">Abandonar quiz</button>
+            </div>
+
+        </div>
+    </section>
+
+    <script type="module" src="./js/main.js"></script>
+</body>
 </html>
