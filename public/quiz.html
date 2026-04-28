@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,13 +30,13 @@
 
     <section id="screen-joc" class="screen">
         <div class="quiz-container">
-            
+
             <h2 class="category-theme">Tema: <span id="current-theme">Història</span></h2>
-            
+
             <div class="question-counter">
                 Pregunta <span id="current-question">2</span> de <span id="total-questions">24</span> (0%)
             </div>
-            
+
             <div class="score-display">
                 Puntuació: <span id="current-score">0</span>
             </div>
@@ -49,12 +50,17 @@
             </div>
 
             <div class="options-grid">
-                <button class="option-btn" id="option-a">Opció A</button> <button class="option-btn" id="option-b">Opció B</button>
-                <button class="option-btn" id="option-c">Opció C</button> <button class="option-btn" id="option-d">Opció D</button>
+                <button class="option-btn" id="option-a">Opció A</button> <button class="option-btn" id="option-b">Opció
+                    B</button>
+                <button class="option-btn" id="option-c">Opció C</button> <button class="option-btn" id="option-d">Opció
+                    D</button>
             </div>
 
             <div class="quiz-footer">
                 <button id="btn-leave" class="btn-leave">Abandonar quiz</button>
+                <button id="btn-next-question" class="btn-next" hidden>
+                    Següent pregunta
+                </button>
             </div>
 
         </div>
@@ -62,4 +68,5 @@
 
     <script type="module" src="./js/main.js"></script>
 </body>
+
 </html>
