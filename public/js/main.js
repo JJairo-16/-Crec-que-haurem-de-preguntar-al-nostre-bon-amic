@@ -13,7 +13,8 @@ const dom = {
   sectionCategorySelect: document.getElementById('section-category-select'),
   displayName: document.getElementById('display-name'),
   categoryGrid: document.getElementById('category-grid'),
-  userNameError: document.getElementById('user-name-error')
+  userNameError: document.getElementById('user-name-error'),
+  categoryError: document.getElementById('category-error')
 };
 
 const state = {
@@ -60,6 +61,14 @@ function showValidationError(message) {
   dom.userNameInput.classList.add('input-invalid');
 }
 
+function clearCategoryError() {
+  dom.categoryError.textContent = '';
+}
+
+function showCategoryError(message) {
+  dom.categoryError.textContent = message;
+}
+
 function validatePlayerName() {
   const userName = dom.userNameInput.value.trim();
 
@@ -77,6 +86,7 @@ function showCategorySection(playerName) {
   dom.displayName.textContent = playerName;
   dom.sectionNameInput.style.display = 'none';
   dom.sectionCategorySelect.style.display = 'block';
+  clearCategoryError();
   saveCurrentScreen('category');
 }
 
@@ -99,6 +109,7 @@ function resetThemeSelection() {
 
 function backToNameSelection() {
   resetThemeSelection();
+  clearCategoryError();
   showNameSection();
 }
 
@@ -110,6 +121,7 @@ function selectTheme(button, themeName) {
   state.selectedButton = button;
   state.selectedTheme = themeName;
   button.classList.add('selected');
+  clearCategoryError();
 }
 
 function handleEnter() {
@@ -132,7 +144,7 @@ function handleStartGame() {
   }
 
   if (!state.selectedTheme) {
-    alert('Selecciona una categoria');
+    showCategoryError('Si us plau, selecciona una categoria');
     return;
   }
 
