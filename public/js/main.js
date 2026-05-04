@@ -252,4 +252,8 @@ async function init() {
   }
 }
 
-await init();
+if (document.getElementById('screen-joc')) {
+  await import('./quiz.js');
+} else {
+  await init();
+}
