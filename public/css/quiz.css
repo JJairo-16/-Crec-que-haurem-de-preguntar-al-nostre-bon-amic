@@ -364,7 +364,7 @@ body {
 .result-btn-play {
     background: rgba(50, 205, 50, 0.95);
     color: #ffffff;
-    border-color: rgba(32, 133, 32, 0.95);
+    border-color: rgba(50, 205, 50, 0.75);
 }
 
 .result-btn-play:hover {
@@ -504,7 +504,7 @@ body {
 .btn-next:hover {
     background:  rgba(50, 205, 50, 0.95);
     color: #ffffff;
-    border-color:  rgba(32, 133, 32, 0.95);
+    border-color:  rgba(50, 205, 50, 0.75);
     box-shadow: 0 8px 20px  rgba(50, 205, 50, 0.35);
     transform: translateY(-2px);
 }
