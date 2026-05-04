@@ -12,6 +12,7 @@ const storage = createSessionStorageAdapter(sessionStorage);
 let session = null;
 let isAnswering = false;
 let currentTheme = null;
+let answeredCurrentQuestion = false;
 
 const dom = {
   theme: document.getElementById('current-theme'),
@@ -109,6 +110,7 @@ function updateProgress() {
 
 function resetOptions() {
   dom.btnNextQuestion.hidden = true;
+  answeredCurrentQuestion = false;
 
   dom.optionButtons.forEach(button => {
     button.disabled = false;
@@ -128,12 +130,18 @@ function renderQuestion() {
 
   const question = session.getQuestion();
   const theme = session.getTheme();
+  const progress = session.getProgress();
+  const state = session.getState();
+  const isLastQuestion = state.currentQuestionIndex === progress.total - 1;
 
   dom.theme.textContent = theme.name ?? loadSelectedTheme();
   dom.questionText.textContent = question.announced;
 
   resetOptions();
   updateProgress();
+
+  // Cambiar texto del botón según si es la última pregunta
+  dom.btnNextQuestion.textContent = isLastQuestion ? 'Finalitzar test' : 'Següent pregunta';
 
   question.options.forEach((option, index) => {
     const button = dom.optionButtons[index];
@@ -200,30 +208,37 @@ function renderResults() {
 }
 
 function selectAnswer(selectedIndex) {
-  if (isAnswering || session.hasFinished()) {
+  if (session.hasFinished()) {
     return;
   }
 
-  isAnswering = true;
-
-  const result = session.answer(selectedIndex);
+  let result;
+  if (!answeredCurrentQuestion) {
+    result = session.answer(selectedIndex);
+    answeredCurrentQuestion = true;
+    dom.currentScore.textContent = String(result.score);
+    updateProgress();
+    dom.btnNextQuestion.hidden = false;
+  } else {
+    // Si ya se respondió, solo actualizamos la visualización sin cambiar el resultado
+    result = session.getLastResult?.() || { correctIndex: session.getQuestion().options.findIndex(opt => opt.correct) };
+  }
 
   dom.optionButtons.forEach((button, index) => {
-    button.disabled = true;
+    button.disabled = false;
+    button.classList.remove('selected', 'correct', 'wrong');
 
-    if (index === selectedIndex && !result.correct) {
-      button.classList.add('wrong');
+    if (index === selectedIndex) {
+      button.classList.add('selected');
+      if (result.correctIndex !== selectedIndex) {
+        button.classList.add('wrong');
+      }
     }
 
     if (index === result.correctIndex) {
       button.classList.add('correct');
     }
   });
-
-  dom.currentScore.textContent = String(result.score);
-  updateProgress();
-
-  dom.btnNextQuestion.hidden = false;
 }
 
 function bindEvents() {
