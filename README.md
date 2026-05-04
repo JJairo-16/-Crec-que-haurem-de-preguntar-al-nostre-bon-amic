@@ -37,6 +37,14 @@ El projecte busca:
   - **Cine**
   - **Esports**
 - **Capacitat de cambiar Nom**: Et torna a la web principal per poder cambiar el nom
+
+### Pantalla de Resultats
+- **Visualització de puntuació**: Mostra el percentatge de preguntes acertades amb gradient visual
+- **Mascota temàtica**: Apareix la mascota del tema seleccionat amb animació
+- **Opcions de continuació**: 
+  - **"Tornar a jugar"**: Permet jugar novament amb el mateix tema
+  - **"Sortir"**: Retorna a la selecció de temes
+- **Estilos animats**: Transicions suaus i efectes de bounce per a millor experiència
 ### Sistema de Preguntes
 
 Els usuaris participen responent preguntes de diferents categories:
@@ -46,9 +54,13 @@ Característiques:
 - **Selecció dinàmica de preguntes**: Carrega des de fitxers JSON específics per cada tema
 - **Barreja aleatòria**: Les preguntes es mostren en ordre aleatori (algoritme Fisher-Yates)
 - **Validació de respostes en temps real**: Feedback immediat de correctesa
+- **Canvi de resposta**: L'usuari pot canviar de resposta mentre no hagi anat a la següent pregunta
 - **Progressió basada en encerts**: Seguiment del rendiment durant la sessió
 - **15 preguntes per sessió**: Nombre configurable de preguntes
-- **Interfície del Quiz mejorada**: Pantalla dedicada amb estilos moderns i responsiva  
+- **Interfície del Quiz mejorada**: Pantalla dedicada amb estilos moderns i responsiva
+- **Feedback visual**: Les respostes es mostren amb colors:
+  - **Blau**: Resposta seleccionada per l'usuari
+- **Últim botó personalitzat**: El botó de navegació canvia a "Finalitzar test" en l'última pregunta  
 
 ---
 
@@ -59,18 +71,29 @@ Característiques:
 - **Dades**: JSON per a temes i preguntes
 - **Emmagatzematge**: SessionStorage per a persistència de sessió
 - **Arquitectura**: Modular amb librerías especializadas
+- **Estilos**: CSS3 amb animacions, gradients i transicions suaves
 
 ### Librerías Implementades
 - **`quiz-service.js`**: Gestor de sessions de quiz amb control d'estat del joc
 - **`themes-loader.js`**: Carga dinàmica de temes i preguntes, barreja aleatòria
 - **`storage-adapter.js`**: Sistema adapter per a emmagatzematge en memòria i sessionStorage
 
+### Característiques CSS Implementades
+- **Classe `.selected`**: Estil visual en color azul per a respostes seleccionades
+- **Classe `.correct`**: Estil visual en color verd per a respostes correctes
+- **Classe `.wrong`**: Estil visual en color roig per a respostes incorrectes
+- **Animacions**: Transicions suaus (ease-out-soft, ease-spring) per a tots els elements
+- **Efectes hover**: Levantament visual i efectes de brillantez en botons
+- **Pantalla de resultats**: Estilos completes amb gradients, animacions bounce i layout flexible
+- **Responsivitat**: Media queries per a dispositius petits (620px, 380px)
 ### Característiques de Desenvolupament
 - Modularització amb ES6 Modules
 - Cache en memòria per optimitzar carregues
 - Copia defensiva de dades per evitar mutacions externes
 - Validació i gestió d'errors
-
+- Control d'estat per a permitir canvi de resposta sense afectar puntuació
+- Flag `answeredCurrentQuestion` per a gestionar una sola actualització de punts per pregunta
+- Dinàmica de botons amb text condicional (Següent pregunta / Finalitzar test)
 ---
 
 ## ▌Sistema de Puntuació
