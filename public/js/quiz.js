@@ -2,17 +2,24 @@ import { createQuizSession, QuizSession } from './libs/quiz-service.js';
 import { createSessionStorageAdapter } from './libs/storage-adapter.js';
 import { getThemeByName } from './libs/themes-loader.js';
 
-const PLAYER_NAME_KEY = 'playerName';
 const SELECTED_THEME_KEY = 'selectedTheme';
-const CURRENT_SCREEN_KEY = 'currentScreen';
 const QUIZ_STATE_KEY = 'quizState';
+const TIMER_STATE_KEY = 'quizTimerState';
+
+const QUESTION_TIME_LIMIT_MS = 20000;
 
 const storage = createSessionStorageAdapter(sessionStorage);
 
 let session = null;
-let isAnswering = false;
 let currentTheme = null;
+
 let answeredCurrentQuestion = false;
+let selectedAnswerIndex = null;
+let currentQuestionSnapshot = null;
+
+let timerId = null;
+let remainingMs = QUESTION_TIME_LIMIT_MS;
+let lastTick = null;
 
 const dom = {
   theme: document.getElementById('current-theme'),
@@ -21,6 +28,8 @@ const dom = {
   totalQuestions: document.getElementById('total-questions'),
   currentScore: document.getElementById('current-score'),
   progressBar: document.getElementById('progress-bar'),
+  timerText: document.getElementById('timer-text'),
+  timerBar: document.getElementById('timer-bar'),
   btnLeave: document.getElementById('btn-leave'),
   btnNextQuestion: document.getElementById('btn-next-question'),
   optionButtons: [
@@ -31,19 +40,108 @@ const dom = {
   ]
 };
 
+/* =========================
+   STORAGE
+========================= */
+
 function loadSelectedTheme() {
   return sessionStorage.getItem(SELECTED_THEME_KEY) ?? '';
 }
 
-function loadPlayerName() {
-  return sessionStorage.getItem(PLAYER_NAME_KEY) ?? '';
+function saveTimerState() {
+  if (!session) return;
+
+  storage.set(TIMER_STATE_KEY, {
+    questionIndex: session.getState().currentQuestionIndex,
+    remainingMs
+  });
 }
 
-function saveCurrentScreen(screen) {
-  sessionStorage.setItem(CURRENT_SCREEN_KEY, screen);
+function loadTimerState() {
+  return storage.get(TIMER_STATE_KEY);
 }
+
+function clearTimerState() {
+  storage.remove(TIMER_STATE_KEY);
+}
+
+/* =========================
+   TIMER
+========================= */
+
+function stopTimer() {
+  if (timerId !== null) {
+    cancelAnimationFrame(timerId);
+    timerId = null;
+  }
+}
+
+function updateTimerDisplay() {
+  if (!dom.timerText || !dom.timerBar) return;
+
+  const safeMs = Math.max(remainingMs, 0);
+  const percentage = (safeMs / QUESTION_TIME_LIMIT_MS) * 100;
+
+  const seconds = Math.ceil(safeMs / 1000);
+
+  dom.timerText.textContent = `${seconds}s`;
+  dom.timerBar.style.width = `${percentage}%`;
+  dom.timerBar.classList.toggle('timer-danger', seconds <= 5);
+}
+
+function startTimer() {
+  stopTimer();
+
+  const currentQuestionIndex = session.getState().currentQuestionIndex;
+  const savedTimer = loadTimerState();
+
+  if (
+    savedTimer &&
+    savedTimer.questionIndex === currentQuestionIndex &&
+    typeof savedTimer.remainingMs === 'number'
+  ) {
+    remainingMs = Math.max(savedTimer.remainingMs, 0);
+  } else {
+    remainingMs = QUESTION_TIME_LIMIT_MS;
+    saveTimerState();
+  }
+
+  updateTimerDisplay();
+
+  if (remainingMs <= 0) {
+    submitAnswer({ timedOut: true });
+    return;
+  }
+
+  lastTick = performance.now();
+
+  timerId = requestAnimationFrame(tick);
+}
+
+function tick(now) {
+  const delta = now - lastTick;
+  lastTick = now;
+
+  remainingMs = Math.max(remainingMs - delta, 0);
+
+  saveTimerState();
+  updateTimerDisplay();
+
+  if (remainingMs <= 0) {
+    submitAnswer({ timedOut: true });
+    return;
+  }
+
+  timerId = requestAnimationFrame(tick);
+}
+
+/* =========================
+   QUIZ SESSION
+========================= */
 
 function goHome() {
+  stopTimer();
+  clearTimerState();
   storage.remove(QUIZ_STATE_KEY);
   globalThis.location.href = './index.html';
 }
@@ -73,6 +171,7 @@ async function loadQuizSession(themeName) {
   }
 
   storage.remove(QUIZ_STATE_KEY);
+  clearTimerState();
 
   return createQuizSession({
     themeName,
@@ -81,9 +180,40 @@ async function loadQuizSession(themeName) {
   });
 }
 
+/* =========================
+   QUESTION HELPERS
+========================= */
+
+function getCorrectIndexFromQuestion(question) {
+  if (!question?.options) return -1;
+
+  return question.options.findIndex(option =>
+    option.correct === true ||
+    option.isCorrect === true ||
+    option.is_correct === true
+  );
+}
+
+function getTimeoutWrongIndex(question) {
+  if (!question?.options?.length) return -1;
+
+  const correctIndex = getCorrectIndexFromQuestion(question);
+
+  const wrongIndex = question.options.findIndex((_, index) => {
+    return index !== correctIndex;
+  });
+
+  return wrongIndex === -1 ? 0 : wrongIndex;
+}
+
+/* =========================
+   RENDER
+========================= */
+
 function updateProgress() {
   const progress = session.getProgress();
   const state = session.getState();
+
   const percentage = progress.total > 0
     ? Math.round((state.currentQuestionIndex / progress.total) * 100)
     : 0;
@@ -91,11 +221,13 @@ function updateProgress() {
   dom.currentQuestion.textContent = String(
     Math.min(state.currentQuestionIndex + 1, progress.total)
   );
+
   dom.totalQuestions.textContent = String(progress.total);
   dom.currentScore.textContent = String(state.score);
   dom.progressBar.style.width = `${percentage}%`;
 
   const counter = dom.currentQuestion.closest('.question-counter');
+
   if (counter) {
     counter.innerHTML = `
       Pregunta <span id="current-question">${Math.min(state.currentQuestionIndex + 1, progress.total)}</span>
@@ -109,8 +241,14 @@ function updateProgress() {
 }
 
 function resetOptions() {
-  dom.btnNextQuestion.hidden = true;
   answeredCurrentQuestion = false;
+  selectedAnswerIndex = null;
+
+  document.querySelector('.options-grid')?.classList.remove('answered');
+
+  dom.btnNextQuestion.hidden = false;
+  dom.btnNextQuestion.disabled = true;
+  dom.btnNextQuestion.textContent = 'Enviar';
 
   dom.optionButtons.forEach(button => {
     button.disabled = false;
@@ -121,7 +259,7 @@ function resetOptions() {
 }
 
 function renderQuestion() {
-  isAnswering = false;
+  stopTimer();
 
   if (session.hasFinished()) {
     renderResults();
@@ -130,9 +268,8 @@ function renderQuestion() {
 
   const question = session.getQuestion();
   const theme = session.getTheme();
-  const progress = session.getProgress();
-  const state = session.getState();
-  const isLastQuestion = state.currentQuestionIndex === progress.total - 1;
+
+  currentQuestionSnapshot = question;
 
   dom.theme.textContent = theme.name ?? loadSelectedTheme();
   dom.questionText.textContent = question.announced;
@@ -140,15 +277,9 @@ function renderQuestion() {
   resetOptions();
   updateProgress();
 
-  // Cambiar texto del botón según si es la última pregunta
-  dom.btnNextQuestion.textContent = isLastQuestion ? 'Finalitzar test' : 'Següent pregunta';
-
   question.options.forEach((option, index) => {
     const button = dom.optionButtons[index];
-
-    if (!button) {
-      return;
-    }
+    if (!button) return;
 
     button.textContent = option.text;
     button.dataset.index = String(index);
@@ -157,18 +288,21 @@ function renderQuestion() {
   for (let i = question.options.length; i < dom.optionButtons.length; i++) {
     dom.optionButtons[i].style.display = 'none';
   }
+
+  startTimer();
 }
 
 function renderResults() {
+  stopTimer();
+  clearTimerState();
+
   const results = session.getResults();
   const percentage = Math.round(results.percentage);
-
   const quizContainer = document.querySelector('.quiz-container');
 
   quizContainer.innerHTML = `
     <section class="result-screen">
       <article class="result-card">
-
         <div class="result-top">
           <h1 class="result-title">RESULTAT</h1>
           <img 
@@ -191,55 +325,99 @@ function renderResults() {
             SORTIR
           </button>
         </div>
-
       </article>
     </section>
   `;
 
   document.getElementById('btn-play-again').addEventListener('click', () => {
     storage.remove(QUIZ_STATE_KEY);
+    clearTimerState();
     globalThis.location.href = './quiz.html';
   });
 
   document.getElementById('btn-exit').addEventListener('click', () => {
     storage.remove(QUIZ_STATE_KEY);
+    clearTimerState();
     globalThis.location.href = './index.html';
   });
 }
 
-function selectAnswer(selectedIndex) {
-  if (session.hasFinished()) {
-    return;
-  }
+/* =========================
+   ANSWERS
+========================= */
 
-  let result;
-  if (!answeredCurrentQuestion) {
-    result = session.answer(selectedIndex);
-    answeredCurrentQuestion = true;
-    dom.currentScore.textContent = String(result.score);
-    updateProgress();
-    dom.btnNextQuestion.hidden = false;
-  } else {
-    // Si ya se respondió, solo actualizamos la visualización sin cambiar el resultado
-    result = session.getLastResult?.() || { correctIndex: session.getQuestion().options.findIndex(opt => opt.correct) };
-  }
+function selectAnswer(selectedIndex) {
+  if (session.hasFinished() || answeredCurrentQuestion) return;
+
+  selectedAnswerIndex = selectedIndex;
+  dom.btnNextQuestion.disabled = false;
 
   dom.optionButtons.forEach((button, index) => {
-    button.disabled = false;
-    button.classList.remove('selected', 'correct', 'wrong');
+    button.classList.toggle('selected', index === selectedIndex);
+    button.classList.remove('correct', 'wrong');
+  });
+}
 
-    if (index === selectedIndex) {
-      button.classList.add('selected');
-      if (result.correctIndex !== selectedIndex) {
-        button.classList.add('wrong');
-      }
-    }
+function revealAnswer(result, selectedIndex, timedOut = false) {
+  const question = currentQuestionSnapshot;
+
+  document.querySelector('.options-grid')?.classList.add('answered');
+
+  dom.optionButtons.forEach((button, index) => {
+    button.disabled = true;
+    button.classList.remove('selected', 'correct', 'wrong');
 
     if (index === result.correctIndex) {
       button.classList.add('correct');
+      return;
+    }
+
+    if (timedOut) {
+      button.classList.add('wrong');
+      return;
+    }
+
+    if (index === selectedIndex) {
+      button.classList.add('selected', 'wrong');
     }
   });
+
+  if (timedOut && question) {
+    dom.questionText.textContent =
+      `${question.announced} — Temps esgotat. La resposta compta com a incorrecta.`;
+  }
 }
+
+function submitAnswer({ timedOut = false } = {}) {
+  if (session.hasFinished() || answeredCurrentQuestion) return;
+
+  if (!timedOut && selectedAnswerIndex === null) return;
+
+  stopTimer();
+  clearTimerState();
+
+  answeredCurrentQuestion = true;
+
+  const selectedIndex = timedOut
+    ? getTimeoutWrongIndex(currentQuestionSnapshot)
+    : selectedAnswerIndex;
+
+  const result = session.answer(selectedIndex);
+  const isLastQuestion = result.finished;
+
+  revealAnswer(result, selectedIndex, timedOut);
+
+  dom.currentScore.textContent = String(result.score);
+
+  dom.btnNextQuestion.disabled = false;
+  dom.btnNextQuestion.textContent = isLastQuestion
+    ? 'Finalitzar test'
+    : 'Següent pregunta';
+}
+
+/* =========================
+   EVENTS / INIT
+========================= */
 
 function bindEvents() {
   dom.optionButtons.forEach(button => {
@@ -249,7 +427,12 @@ function bindEvents() {
   });
 
   dom.btnNextQuestion.addEventListener('click', () => {
-    renderQuestion();
+    if (answeredCurrentQuestion) {
+      renderQuestion();
+      return;
+    }
+
+    submitAnswer();
   });
 
   dom.btnLeave?.addEventListener('click', goHome);

@@ -41,6 +41,14 @@
                 Puntuació: <span id="current-score">0</span>
             </div>
 
+            <div class="timer-display">
+                Temps restant: <span id="timer-text">20s</span>
+            </div>
+
+            <div class="timer-container" aria-hidden="true">
+                <div id="timer-bar" class="timer-fill"></div>
+            </div>
+
             <div class="progress-container">
                 <div id="progress-bar" class="progress-fill"></div>
             </div>
@@ -58,8 +66,8 @@
 
             <div class="quiz-footer">
                 <button id="btn-leave" class="btn-leave">Abandonar quiz</button>
-                <button id="btn-next-question" class="btn-next" hidden>
-                    Següent pregunta
+                <button id="btn-next-question" class="btn-next" disabled>
+                    Enviar
                 </button>
             </div>
 
